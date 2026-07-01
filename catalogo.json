@@ -2055,7 +2055,7 @@
       "Tamaño": "25",
       "UM": "saq",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate",
+      "Subcategoria": "Té e Infusiones",
       "Tags": "mate cocido, sobre, infusión, caliente, desayuno",
       "Id_Grupo": "175",
       "Tipo_Variante": "",
@@ -2167,7 +2167,7 @@
       "Tamaño": "50",
       "UM": "saq",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate",
+      "Subcategoria": "Té e Infusiones",
       "Tags": "mate cocido, sobre, infusión, caliente, desayuno",
       "Id_Grupo": "174",
       "Tipo_Variante": "",
@@ -2979,7 +2979,7 @@
       "Tamaño": "50",
       "UM": "saq",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate",
+      "Subcategoria": "Té e Infusiones",
       "Tags": "mate cocido, sobre, infusión, caliente, desayuno",
       "Id_Grupo": "175",
       "Tipo_Variante": "",
@@ -3091,7 +3091,7 @@
       "Tamaño": "25",
       "UM": "saq",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate",
+      "Subcategoria": "Té e Infusiones",
       "Tags": "mate cocido, sobre, infusión, caliente, desayuno",
       "Id_Grupo": "174",
       "Tipo_Variante": "",
@@ -12614,14 +12614,14 @@
       "Nombre_Grupo": "Mate Cocido",
       "Marca": "TARAGUI",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate"
+      "Subcategoria": "Té e Infusiones"
     },
     {
       "Id_Grupo": "175",
       "Nombre_Grupo": "Mate Cocido",
       "Marca": "NORY",
       "Categoria": "Desayuno y Mediatarde",
-      "Subcategoria": "Yerba Mate"
+      "Subcategoria": "Té e Infusiones"
     },
     {
       "Id_Grupo": "176",
