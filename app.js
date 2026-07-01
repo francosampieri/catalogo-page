@@ -359,21 +359,6 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
     }
   }
 
-<<<<<<< Updated upstream
-  // Imagen + dots sincronizados
-  const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
-  if (imgEl && url) {
-    // Actualizar dots cuando la imagen termina de cargar
-    imgEl.onload = () => actualizarDots(gid, idx);
-    imgEl.onerror = () => actualizarDots(gid, idx);
-    imgEl.src = url;
-  } else {
-    // Sin imagen: actualizar dots inmediatamente
-    actualizarDots(gid, idx);
-  }
-}
-
-=======
   // Imagen + placeholder + dots sincronizados
   if (imgEl) {
     const placeholder = imgEl.previousElementSibling;
@@ -406,7 +391,6 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
   }
 }
 
->>>>>>> Stashed changes
 function actualizarDots(gid, idx) {
   const dotsEl = document.getElementById(`dots-${gid}`);
   if (dotsEl) {
