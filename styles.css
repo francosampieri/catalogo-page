@@ -1102,6 +1102,10 @@ img { display: block; max-width: 100%; }
     drop-shadow(0px 18px 8px rgba(60, 90, 45, 0.50))
     drop-shadow(0px 22px 18px rgba(60, 90, 45, 0.28))
     drop-shadow(0px 30px 28px rgba(60, 90, 45, 0.12));
+  transition: opacity 0.25s var(--ease);
+}
+.card-img-wrap img.img-fading {
+  opacity: 0;
 }
 .card-img-placeholder {
   font-size: 2rem;
@@ -1169,12 +1173,14 @@ img { display: block; max-width: 100%; }
   color: var(--t3);
   margin-bottom: var(--space-2);
   min-height: 14px;
+  transition: opacity 0.2s var(--ease);
 }
 .card-precio {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--accent);
   letter-spacing: -0.02em;
+  transition: opacity 0.2s var(--ease);
 }
 .card-precio.sin-precio {
   font-size: 0.75rem;
@@ -1450,6 +1456,32 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .carrito-item:last-child { border-bottom: none; }
+
+.ci-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r2);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.ci-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+.ci-img-placeholder {
+  font-size: 1.2rem;
+  opacity: 0.3;
+}
+.ci-img-placeholder.hidden { display: none; }
+
 
 .ci-info { flex: 1; min-width: 0; }
 .ci-nombre {

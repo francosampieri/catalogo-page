@@ -332,7 +332,7 @@ function crearCard(gid, vars) {
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
-  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl);
+  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, false);
 
   // Rotación automática si hay múltiples variantes
   if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl);
@@ -346,54 +346,75 @@ function crearCard(gid, vars) {
   return card;
 }
 
-function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
+function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, animar = true) {
   const v = vars[idx];
   const precio = parsePrecio(v['Precio_Venta']);
 
-  // Label
-  if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
+  const aplicarCambios = () => {
+    // Label
+    if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
 
-  // Precio
-  if (vprecioEl) {
-    if (precio !== null) {
-      vprecioEl.textContent = formatPrecio(precio);
-      vprecioEl.className = 'card-precio';
-    } else {
-      vprecioEl.textContent = 'Precio a confirmar';
-      vprecioEl.className = 'card-precio sin-precio';
+    // Precio
+    if (vprecioEl) {
+      if (precio !== null) {
+        vprecioEl.textContent = formatPrecio(precio);
+        vprecioEl.className = 'card-precio';
+      } else {
+        vprecioEl.textContent = 'Precio a confirmar';
+        vprecioEl.className = 'card-precio sin-precio';
+      }
     }
-  }
 
-  // Imagen + placeholder + dots sincronizados
-  if (imgEl) {
-    const placeholder = imgEl.previousElementSibling;
-    const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
+    // Imagen + placeholder + dots sincronizados
+    if (imgEl) {
+      const placeholder = imgEl.previousElementSibling;
+      const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
 
-    if (url) {
-      imgEl.onload = () => {
-        imgEl.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
-        actualizarDots(gid, idx);
-      };
-      imgEl.onerror = () => {
+      if (url) {
+        imgEl.onload = () => {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+          imgEl.classList.remove('img-fading');
+          actualizarDots(gid, idx);
+        };
+        imgEl.onerror = () => {
+          imgEl.style.display = 'none';
+          if (placeholder) placeholder.style.display = 'flex';
+          imgEl.classList.remove('img-fading');
+          actualizarDots(gid, idx);
+        };
+        // Si la imagen ya está cacheada, onload no se dispara — forzar
+        if (imgEl.src === url && imgEl.complete) {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+          imgEl.classList.remove('img-fading');
+          actualizarDots(gid, idx);
+        } else {
+          imgEl.src = url;
+        }
+      } else {
         imgEl.style.display = 'none';
         if (placeholder) placeholder.style.display = 'flex';
+        imgEl.classList.remove('img-fading');
         actualizarDots(gid, idx);
-      };
-      // Si la imagen ya está cacheada, onload no se dispara — forzar
-      if (imgEl.src === url && imgEl.complete) {
-        imgEl.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
-        actualizarDots(gid, idx);
-      } else {
-        imgEl.src = url;
       }
-    } else {
-      imgEl.style.display = 'none';
-      if (placeholder) placeholder.style.display = 'flex';
-      actualizarDots(gid, idx);
     }
+
+    if (vlabelEl)  vlabelEl.style.opacity  = '1';
+    if (vprecioEl) vprecioEl.style.opacity = '1';
+  };
+
+  if (!animar || !imgEl) {
+    aplicarCambios();
+    return;
   }
+
+  // Crossfade: ocultar, esperar, actualizar contenido, mostrar
+  imgEl.classList.add('img-fading');
+  if (vlabelEl)  vlabelEl.style.opacity  = '0';
+  if (vprecioEl) vprecioEl.style.opacity = '0';
+
+  setTimeout(aplicarCambios, 180);
 }
 
 function actualizarDots(gid, idx) {
@@ -671,12 +692,13 @@ function agregarAlCarrito(gid, variante, qty) {
   const precioDto = parsePrecio(variante['Precio_Dto']);
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const idProd    = variante['Id'];
+  const imagen    = variante['Imagen']?.trim() || '';
 
   const existe = carrito.find(i => i.idProd === idProd);
   if (existe) {
     existe.qty += qty;
   } else {
-    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty });
+    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty, imagen });
   }
 
   actualizarUICarrito();
@@ -753,7 +775,14 @@ function renderCarritoItems() {
 
     const div = document.createElement('div');
     div.className = 'carrito-item';
+    const imgHtml = item.imagen
+      ? `<img src="${item.imagen}" alt="" class="ci-img" onerror="this.remove(); this.parentElement.querySelector('.ci-img-placeholder')?.classList.remove('hidden')">`
+      : '';
     div.innerHTML = `
+      <div class="ci-thumb">
+        ${imgHtml}
+        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}">📦</div>
+      </div>
       <div class="ci-info">
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
         ${item.varLabel ? `<div class="ci-variante">${item.varLabel}</div>` : ''}
