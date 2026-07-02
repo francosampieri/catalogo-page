@@ -64,10 +64,10 @@
 
   <!-- Hero -->
   <section class="hero-bg">
-  <div class="hero-deco" aria-hidden="true">
-    <span class="hero-circle hero-circle--1"></span>
-    <span class="hero-circle hero-circle--2"></span>
-    <span class="hero-circle hero-circle--3"></span>
+  <div class="bg-circles" aria-hidden="true">
+    <span class="bg-circle bg-circle--dash" style="width:340px;height:340px;top:-140px;left:-110px;"></span>
+    <span class="bg-circle" style="width:140px;height:140px;top:60%;left:30%;opacity:.35;"></span>
+    <span class="bg-circle bg-circle--fill" style="width:60px;height:60px;top:18%;left:44%;opacity:.7;"></span>
   </div>
   <div class="hero">
     <div class="hero-inner">
@@ -109,8 +109,13 @@
   </section>
 
   <!-- Cómo comprar -->
-  <section id="como-comprar" class="como-comprar">
+  <section id="como-comprar" class="como-comprar seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--dash" style="width:220px;height:220px;top:-90px;right:-70px;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:70px;height:70px;bottom:10%;left:6%;opacity:.6;"></span>
+    </div>
     <div class="como-comprar-inner">
+      <span class="seccion-eyebrow"><span class="seccion-eyebrow-dot"></span>Es así de simple</span>
       <h2 class="seccion-h2-center">Como hacer un pedido</h2>
       <div class="pasos-row">
 
@@ -169,8 +174,13 @@
   </section>
 
   <!-- Las vueltas que te ahorramos -->
-  <section class="vueltas">
+  <section class="vueltas seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle" style="width:180px;height:180px;top:10%;left:-80px;opacity:.4;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:120px;height:120px;bottom:-40px;right:8%;"></span>
+    </div>
     <div class="vueltas-inner">
+      <span class="seccion-eyebrow"><span class="seccion-eyebrow-dot"></span>El camino corto</span>
       <h2 class="seccion-h2-center">Las vueltas que te ahorramos</h2>
 
       <div class="vueltas-svg-wrap">
@@ -253,8 +263,13 @@
   </section>
 
   <!-- Beneficios -->
-  <section class="beneficios">
+  <section class="beneficios seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--fill" style="width:90px;height:90px;top:8%;right:10%;opacity:.6;"></span>
+      <span class="bg-circle bg-circle--dash" style="width:260px;height:260px;bottom:-130px;left:-100px;"></span>
+    </div>
     <div class="beneficios-inner">
+      <span class="seccion-eyebrow"><span class="seccion-eyebrow-dot"></span>Por qué elegirnos</span>
       <h2 class="seccion-h2-center">Beneficios</h2>
       <div class="beneficios-grid">
 
@@ -312,8 +327,13 @@
   </section>
 
   <!-- Categorías principales -->
-  <section class="categorias-home">
+  <section class="categorias-home seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle" style="width:150px;height:150px;top:-60px;right:16%;opacity:.4;"></span>
+      <span class="bg-circle bg-circle--fill" style="width:60px;height:60px;bottom:14%;left:4%;opacity:.65;"></span>
+    </div>
     <div class="categorias-home-inner">
+      <span class="seccion-eyebrow"><span class="seccion-eyebrow-dot"></span>Explorá el catálogo</span>
       <h2 class="seccion-h2-center">Categorías principales</h2>
       <div class="categorias-grid">
 
@@ -364,10 +384,14 @@
   </section>
 
   <!-- FAQ -->
-  <section id="faq" class="faq-section">
+  <section id="faq" class="faq-section seccion-deco">
+    <div class="bg-circles" aria-hidden="true">
+      <span class="bg-circle bg-circle--dash" style="width:200px;height:200px;top:-70px;left:-80px;"></span>
+      <span class="bg-circle" style="width:100px;height:100px;bottom:6%;right:8%;opacity:.4;"></span>
+    </div>
     <div class="faq-inner">
       <div class="faq-header">
-        <div class="sobre-label">Preguntas frecuentes</div>
+        <span class="seccion-eyebrow"><span class="seccion-eyebrow-dot"></span>Preguntas frecuentes</span>
         <h2 class="sobre-title">Todo lo que necesitás saber.</h2>
       </div>
       <div class="faq-list">
@@ -420,7 +444,15 @@
   <!-- CTA final -->
   <section class="cta-final">
     <div class="cta-final-inner">
-      <h2>¿Listo para comprar más simple?</h2>
+      <div class="bg-circles" aria-hidden="true">
+        <span class="bg-circle bg-circle--dash" style="width:180px;height:180px;top:-70px;right:-50px;border-color:#fff;opacity:.5;"></span>
+        <span class="bg-circle" style="width:90px;height:90px;bottom:-40px;left:6%;border-color:#fff;opacity:.4;"></span>
+      </div>
+      <h2>¿Listo para comprar más simple?
+        <svg class="hero-underline-mini" viewBox="0 0 120 8" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2 6 Q 30 1, 60 5 T 118 4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </h2>
       <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
     </div>
   </section>

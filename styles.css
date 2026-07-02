@@ -349,53 +349,79 @@ img { display: block; max-width: 100%; }
 
 
 /* ══════════════════════════════════════════════════════
-   LANDING — HERO
+   DECORACIÓN GLOBAL — círculos de fondo minimalistas
+   Se reutilizan en distintas secciones del landing.
 ══════════════════════════════════════════════════════ */
+.bg-circles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-line);
+  opacity: .5;
+}
+.bg-circle--fill {
+  background: var(--accent-bg);
+  border-color: var(--accent-line);
+}
+.bg-circle--dash { border-style: dashed; }
+@media (max-width: 860px) {
+  .bg-circles .bg-circle:nth-child(2),
+  .bg-circles .bg-circle:nth-child(3) { display: none; }
+}
+
+/* Cualquier sección con .seccion-deco debe llevar position:relative
+   y su contenido interno con position:relative + z-index:1 */
+.seccion-deco { position: relative; overflow: hidden; }
+.seccion-deco > *:not(.bg-circles) { position: relative; z-index: 1; }
+
+/* ── Eyebrow / pill reutilizable arriba de títulos de sección ── */
+.seccion-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--rf);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: 0 auto var(--space-4);
+  width: fit-content;
+}
+.seccion-eyebrow-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.faq-header .seccion-eyebrow,
+.como-comprar .seccion-eyebrow,
+.beneficios .seccion-eyebrow,
+.categorias-home .seccion-eyebrow,
+.vueltas .seccion-eyebrow {
+  display: flex;
+}
+.faq-header { text-align: left; }
+.faq-header .seccion-eyebrow { margin: 0 0 var(--space-3); }
+
+
 .hero-bg {
   background: var(--surface);
   overflow: hidden;
   position: relative;
 }
-
-/* ── Círculos decorativos minimalistas ── */
-.hero-deco {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-.hero-circle {
-  position: absolute;
-  border-radius: 50%;
-  border: 1.5px solid var(--accent-line);
-}
-.hero-circle--1 {
-  width: 340px;
-  height: 340px;
-  top: -140px;
-  left: -110px;
-  border-style: dashed;
-  opacity: .55;
-}
-.hero-circle--2 {
-  width: 140px;
-  height: 140px;
-  top: 60%;
-  left: 30%;
-  opacity: .4;
-}
-.hero-circle--3 {
-  width: 60px;
-  height: 60px;
-  top: 18%;
-  left: 44%;
-  background: var(--accent-bg);
-  border-color: var(--accent-line);
-  opacity: .7;
-}
-@media (max-width: 860px) {
-  .hero-circle--2, .hero-circle--3 { display: none; }
-}
+.hero-bg .bg-circles { z-index: 0; }
+.hero-bg .hero { position: relative; z-index: 1; }
 
 /* ── Eyebrow como pill ── */
 .hero-eyebrow-pill {
@@ -652,6 +678,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .como-comprar-inner {
+  text-align: center;
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
@@ -685,6 +712,13 @@ img { display: block; max-width: 100%; }
   margin-bottom: var(--space-4);
   color: var(--accent);
   position: relative;
+  box-shadow: var(--s1);
+  transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+.paso:hover .paso-icon {
+  transform: translateY(-3px);
+  box-shadow: var(--s2);
+  border-color: var(--accent-line);
 }
 .paso-icon svg { width: 26px; height: 26px; }
 
@@ -743,6 +777,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .vueltas-inner {
+  text-align: center;
   max-width: 960px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
@@ -769,6 +804,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .beneficios-inner {
+  text-align: center;
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
@@ -786,11 +822,22 @@ img { display: block; max-width: 100%; }
   align-items: center;
   text-align: center;
   gap: var(--space-3);
+  padding: var(--space-5) var(--space-3);
+  border-radius: var(--r4);
+  transition: background var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.beneficio:hover {
+  background: var(--surface-2);
+  transform: translateY(-2px);
 }
 .beneficio svg {
   width: 30px;
   height: 30px;
   color: var(--accent);
+  padding: 10px;
+  box-sizing: content-box;
+  background: var(--accent-bg);
+  border-radius: 50%;
 }
 .beneficio p {
   font-size: 0.8rem;
@@ -808,6 +855,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .categorias-home-inner {
+  text-align: center;
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
@@ -860,10 +908,13 @@ img { display: block; max-width: 100%; }
    CTA FINAL
 ══════════════════════════════════════════════════════ */
 .cta-final {
-  background: var(--surface-2);
+  background: var(--bg);
+  padding: 0 var(--space-5) var(--space-9);
 }
 .cta-final-inner {
-  max-width: 600px;
+  position: relative;
+  overflow: hidden;
+  max-width: 900px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
   text-align: center;
@@ -871,12 +922,23 @@ img { display: block; max-width: 100%; }
   flex-direction: column;
   align-items: center;
   gap: var(--space-6);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r5);
 }
+.cta-final-inner > * { position: relative; z-index: 1; }
 .cta-final h2 {
   font-size: clamp(1.4rem, 2.6vw, 1.8rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   color: var(--t1);
+}
+.cta-final h2 .hero-underline-mini {
+  display: block;
+  width: 120px;
+  height: 8px;
+  margin: 10px auto 0;
+  color: var(--accent);
 }
 
 
@@ -933,12 +995,20 @@ img { display: block; max-width: 100%; }
 }
 .faq-header { position: static; }
 
-.faq-list { display: flex; flex-direction: column; }
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r4);
+  padding: 0 var(--space-5);
+}
 
 .faq-item {
   border-top: 1px solid var(--line-soft);
 }
-.faq-item:last-child { border-bottom: 1px solid var(--line-soft); }
+.faq-item:first-child { border-top: none; }
+.faq-item:last-child { border-bottom: none; }
 
 .faq-pregunta {
   width: 100%;
