@@ -350,7 +350,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
   const v = vars[idx];
   const precio = parsePrecio(v['Precio_Venta']);
 
-  const aplicarCambios = () => {
+  const aplicarCambios = (entrando) => {
     // Label
     if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
 
@@ -370,33 +370,34 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
       const placeholder = imgEl.previousElementSibling;
       const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
 
+      const finalizar = () => {
+        actualizarDots(gid, idx);
+        if (entrando) entrando();
+      };
+
       if (url) {
         imgEl.onload = () => {
           imgEl.style.display = 'block';
           if (placeholder) placeholder.style.display = 'none';
-          imgEl.classList.remove('img-fading');
-          actualizarDots(gid, idx);
+          finalizar();
         };
         imgEl.onerror = () => {
           imgEl.style.display = 'none';
           if (placeholder) placeholder.style.display = 'flex';
-          imgEl.classList.remove('img-fading');
-          actualizarDots(gid, idx);
+          finalizar();
         };
         // Si la imagen ya está cacheada, onload no se dispara — forzar
         if (imgEl.src === url && imgEl.complete) {
           imgEl.style.display = 'block';
           if (placeholder) placeholder.style.display = 'none';
-          imgEl.classList.remove('img-fading');
-          actualizarDots(gid, idx);
+          finalizar();
         } else {
           imgEl.src = url;
         }
       } else {
         imgEl.style.display = 'none';
         if (placeholder) placeholder.style.display = 'flex';
-        imgEl.classList.remove('img-fading');
-        actualizarDots(gid, idx);
+        finalizar();
       }
     }
 
@@ -409,12 +410,22 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
     return;
   }
 
-  // Crossfade: ocultar, esperar, actualizar contenido, mostrar
-  imgEl.classList.add('img-fading');
+  // Deslizamiento: sale hacia la izquierda, cambia contenido, entra desde la derecha
+  imgEl.style.transition = 'opacity 280ms ease, transform 280ms ease';
+  imgEl.style.opacity = '0';
+  imgEl.style.transform = 'translateX(-14px)';
   if (vlabelEl)  vlabelEl.style.opacity  = '0';
   if (vprecioEl) vprecioEl.style.opacity = '0';
 
-  setTimeout(aplicarCambios, 180);
+  setTimeout(() => {
+    aplicarCambios(() => {
+      imgEl.style.transform = 'translateX(14px)';
+      requestAnimationFrame(() => {
+        imgEl.style.opacity = '1';
+        imgEl.style.transform = 'translateX(0)';
+      });
+    });
+  }, 280);
 }
 
 function actualizarDots(gid, idx) {
