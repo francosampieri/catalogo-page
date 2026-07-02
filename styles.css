@@ -450,7 +450,7 @@ img { display: block; max-width: 100%; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center bottom;
+  object-position: center 30%;
   border-radius: 0;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 22%);
   mask-image: linear-gradient(to right, transparent 0%, black 22%);
@@ -1612,4 +1612,125 @@ img { display: block; max-width: 100%; }
   .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
   .beneficios-grid { grid-template-columns: repeat(2, 1fr); }
   .categorias-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   ANIMACIONES
+══════════════════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Hero — entrada escalonada ── */
+.hero-inner > * {
+  opacity: 0;
+  animation: fadeUp 0.6s var(--ease) forwards;
+}
+.hero-eyebrow  { animation-delay: 0.05s; }
+.hero-title    { animation-delay: 0.15s; }
+.hero-pills    { animation-delay: 0.28s; }
+.hero-actions  { animation-delay: 0.40s; }
+
+.hero-photo {
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+/* ── Scroll reveal — base ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Escalonado para grids */
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+.reveal-delay-6 { transition-delay: 0.48s; }
+
+/* ── Cards — micro-interacción al hover ── */
+.card {
+  transition:
+    border-color var(--t) var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+/* ── Categorías — rebote sutil ── */
+.categoria-card {
+  transition:
+    border-color var(--t) var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+.categoria-card:hover { transform: translateY(-4px) scale(1.02); }
+.categoria-card:active { transform: translateY(0) scale(0.98); }
+
+/* ── Botones — press feedback ── */
+.btn-primary,
+.btn-ghost-dark {
+  transition:
+    background var(--t) var(--ease),
+    transform 0.15s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+.btn-primary:active,
+.btn-ghost-dark:active { transform: scale(0.97); }
+
+/* ── Pasos — hover en ícono ── */
+.paso-icon {
+  transition: background var(--t), border-color var(--t), transform 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+.paso:hover .paso-icon {
+  background: var(--accent-bg);
+  border-color: var(--accent-line);
+  transform: scale(1.08);
+}
+
+/* ── FAQ — transición de respuesta ── */
+.faq-respuesta {
+  overflow: hidden;
+  max-height: 0;
+  padding-bottom: 0;
+  transition: max-height 0.35s var(--ease), padding-bottom 0.35s var(--ease);
+  display: block !important; /* override display:none con height */
+}
+.faq-item.open .faq-respuesta {
+  max-height: 300px;
+  padding-bottom: var(--space-4);
+}
+
+/* ── Pills hero — entrada escalonada ── */
+.hero-pill:nth-child(1) { animation-delay: 0.30s; }
+.hero-pill:nth-child(2) { animation-delay: 0.38s; }
+.hero-pill:nth-child(3) { animation-delay: 0.46s; }
+
+/* ── Beneficios — hover icon ── */
+.beneficio svg {
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), color var(--t);
+}
+.beneficio:hover svg { transform: scale(1.2); }
+
+/* Respetar preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

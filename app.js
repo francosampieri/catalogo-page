@@ -888,7 +888,11 @@ function cerrarMegamenu() {
 
 // ══ FAQ ══
 function toggleFaq(btn) {
-  btn.parentElement.classList.toggle('open');
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  // Cerrar todos los demás
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
 }
 
 // ══ EVENTOS GLOBALES ══
@@ -907,3 +911,58 @@ document.getElementById('buscador').addEventListener('input', function() {
 
 // ══ INIT ══
 cargarDatos();
+
+// ══ SCROLL REVEAL ══
+function initReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+function addRevealClasses() {
+  // Títulos de sección
+  document.querySelectorAll('.seccion-h2-center, .sobre-title, .sobre-label').forEach(el => {
+    el.classList.add('reveal');
+  });
+
+  // Pasos
+  document.querySelectorAll('.paso').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // Pilares de beneficios
+  document.querySelectorAll('.beneficio').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // Categorías
+  document.querySelectorAll('.categoria-card').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // FAQ items
+  document.querySelectorAll('.faq-item').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${Math.min(i + 1, 3)}`);
+  });
+
+  // Sección vueltas SVG
+  const vueltas = document.querySelector('.vueltas-svg-wrap');
+  if (vueltas) vueltas.classList.add('reveal');
+
+  // CTA final
+  const cta = document.querySelector('.cta-final-inner');
+  if (cta) cta.classList.add('reveal');
+
+  initReveal();
+}
+
+// Iniciar reveal al cargar la página
+document.addEventListener('DOMContentLoaded', addRevealClasses);
+
