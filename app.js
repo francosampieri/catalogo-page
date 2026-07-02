@@ -205,6 +205,10 @@ function getGruposFiltrados() {
 }
 
 function renderGrupos() {
+  // Limpiar todos los timers de rotación antes de reconstruir el grid,
+  // así no quedan intervalos "fantasma" corriendo sobre cards viejas
+  Object.values(rotaciones).forEach(r => { if (r.timer) clearInterval(r.timer); });
+
   const cont = document.getElementById('catalogo');
   cont.innerHTML = '';
 
@@ -276,8 +280,6 @@ function crearCard(gid, vars) {
 
   const img = document.createElement('img');
   img.style.display = 'none';
-  img.onload  = () => { img.style.display = 'block'; placeholder.style.display = 'none'; };
-  img.onerror = () => { img.style.display = 'none';  placeholder.style.display = 'flex'; };
   imgWrap.append(placeholder, img);
 
   // Dots de variante
@@ -328,8 +330,9 @@ function crearCard(gid, vars) {
   card.append(imgWrap, badge, body, expanded);
 
   // Inicializar vista con variante 0
+  if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
-  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl);
+  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, false);
 
   // Rotación automática si hay múltiples variantes
   if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl);
@@ -343,30 +346,89 @@ function crearCard(gid, vars) {
   return card;
 }
 
-function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl) {
+function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, animar = true) {
   const v = vars[idx];
   const precio = parsePrecio(v['Precio_Venta']);
 
-  // Label
-  if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
+  const aplicarCambios = (entrando) => {
+    // Label
+    if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(v, vars);
 
-  // Precio
-  if (vprecioEl) {
-    if (precio !== null) {
-      vprecioEl.textContent = formatPrecio(precio);
-      vprecioEl.className = 'card-precio';
-    } else {
-      vprecioEl.textContent = 'Precio a confirmar';
-      vprecioEl.className = 'card-precio sin-precio';
+    // Precio
+    if (vprecioEl) {
+      if (precio !== null) {
+        vprecioEl.textContent = formatPrecio(precio);
+        vprecioEl.className = 'card-precio';
+      } else {
+        vprecioEl.textContent = 'Precio a confirmar';
+        vprecioEl.className = 'card-precio sin-precio';
+      }
     }
+
+    // Imagen + placeholder + dots sincronizados
+    if (imgEl) {
+      const placeholder = imgEl.previousElementSibling;
+      const url = v['Imagen'] && v['Imagen'].trim() ? v['Imagen'].trim() : null;
+
+      const finalizar = () => {
+        actualizarDots(gid, idx);
+        if (entrando) entrando();
+      };
+
+      if (url) {
+        imgEl.onload = () => {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+          finalizar();
+        };
+        imgEl.onerror = () => {
+          imgEl.style.display = 'none';
+          if (placeholder) placeholder.style.display = 'flex';
+          finalizar();
+        };
+        // Si la imagen ya está cacheada, onload no se dispara — forzar
+        if (imgEl.src === url && imgEl.complete) {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+          finalizar();
+        } else {
+          imgEl.src = url;
+        }
+      } else {
+        imgEl.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+        finalizar();
+      }
+    }
+
+    if (vlabelEl)  vlabelEl.style.opacity  = '1';
+    if (vprecioEl) vprecioEl.style.opacity = '1';
+  };
+
+  if (!animar || !imgEl) {
+    aplicarCambios();
+    return;
   }
 
-  // Imagen
-  if (imgEl && v['Imagen'] && v['Imagen'].trim()) {
-    imgEl.src = v['Imagen'].trim();
-  }
+  // Deslizamiento: sale hacia la izquierda, cambia contenido, entra desde la derecha
+  imgEl.style.transition = 'opacity 280ms ease, transform 280ms ease';
+  imgEl.style.opacity = '0';
+  imgEl.style.transform = 'translateX(-14px)';
+  if (vlabelEl)  vlabelEl.style.opacity  = '0';
+  if (vprecioEl) vprecioEl.style.opacity = '0';
 
-  // Dots
+  setTimeout(() => {
+    aplicarCambios(() => {
+      imgEl.style.transform = 'translateX(14px)';
+      requestAnimationFrame(() => {
+        imgEl.style.opacity = '1';
+        imgEl.style.transform = 'translateX(0)';
+      });
+    });
+  }, 280);
+}
+
+function actualizarDots(gid, idx) {
   const dotsEl = document.getElementById(`dots-${gid}`);
   if (dotsEl) {
     dotsEl.querySelectorAll('.variante-dot').forEach((d, i) => {
@@ -507,6 +569,22 @@ function renderExpanded(gid, vars, imgEl) {
     const precioDto = varSel ? parsePrecio(varSel['Precio_Dto'])   : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
+    // Sincronizar la parte de arriba de la card (label y precio) con la variante elegida
+    if (varSel) {
+      const vlabelEl  = document.getElementById(`vlabel-${gid}`);
+      const vprecioEl = document.getElementById(`vprecio-${gid}`);
+      if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(varSel, vars);
+      if (vprecioEl) {
+        if (precio !== null) {
+          vprecioEl.textContent = formatPrecio(precio);
+          vprecioEl.className = 'card-precio';
+        } else {
+          vprecioEl.textContent = 'Precio a confirmar';
+          vprecioEl.className = 'card-precio sin-precio';
+        }
+      }
+    }
+
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
     pdiv.innerHTML = precio !== null
@@ -522,10 +600,22 @@ function renderExpanded(gid, vars, imgEl) {
       expanded.appendChild(dtoDiv);
     }
 
-    // Actualizar imagen
-    if (varSel && imgEl && varSel['Imagen']?.trim()) {
-      imgEl.src = varSel['Imagen'].trim();
-      imgEl.style.display = 'block';
+    // Actualizar imagen al seleccionar variante
+    if (varSel && imgEl) {
+      const url = varSel['Imagen']?.trim();
+      const placeholder = imgEl.previousElementSibling;
+      if (url) {
+        imgEl.onload  = () => { imgEl.style.display = 'block'; if (placeholder) placeholder.style.display = 'none'; };
+        imgEl.onerror = () => { imgEl.style.display = 'none';  if (placeholder) placeholder.style.display = 'flex'; };
+        if (imgEl.src === url && imgEl.complete) {
+          imgEl.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+        } else {          imgEl.src = url;
+        }
+      } else {
+        imgEl.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+      }
     }
 
     // Cantidad + agregar
@@ -613,12 +703,13 @@ function agregarAlCarrito(gid, variante, qty) {
   const precioDto = parsePrecio(variante['Precio_Dto']);
   const uniDto    = parseInt(variante['Uni Dto']) || 0;
   const idProd    = variante['Id'];
+  const imagen    = variante['Imagen']?.trim() || '';
 
   const existe = carrito.find(i => i.idProd === idProd);
   if (existe) {
     existe.qty += qty;
   } else {
-    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty });
+    carrito.push({ gid, idProd, nombre, marca, varLabel, precio, precioDto, uniDto, qty, imagen });
   }
 
   actualizarUICarrito();
@@ -695,7 +786,14 @@ function renderCarritoItems() {
 
     const div = document.createElement('div');
     div.className = 'carrito-item';
+    const imgHtml = item.imagen
+      ? `<img src="${item.imagen}" alt="" class="ci-img" onerror="this.remove(); this.parentElement.querySelector('.ci-img-placeholder')?.classList.remove('hidden')">`
+      : '';
     div.innerHTML = `
+      <div class="ci-thumb">
+        ${imgHtml}
+        <div class="ci-img-placeholder${item.imagen ? ' hidden' : ''}">📦</div>
+      </div>
       <div class="ci-info">
         <div class="ci-nombre">${item.marca} ${item.nombre}</div>
         ${item.varLabel ? `<div class="ci-variante">${item.varLabel}</div>` : ''}
@@ -808,9 +906,13 @@ function llenarMegamenu() {
     const col = document.createElement('div');
     col.className = 'megamenu-col';
 
-    const catEl = document.createElement('div');
+    const catEl = document.createElement('button');
     catEl.className = 'megamenu-cat';
     catEl.textContent = cat;
+    catEl.addEventListener('click', () => {
+      cerrarMegamenu();
+      mostrarCatalogo(cat);
+    });
     col.appendChild(catEl);
 
     subs.forEach(sub => {
@@ -846,7 +948,11 @@ function cerrarMegamenu() {
 
 // ══ FAQ ══
 function toggleFaq(btn) {
-  btn.parentElement.classList.toggle('open');
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  // Cerrar todos los demás
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
 }
 
 // ══ EVENTOS GLOBALES ══
@@ -865,3 +971,58 @@ document.getElementById('buscador').addEventListener('input', function() {
 
 // ══ INIT ══
 cargarDatos();
+
+// ══ SCROLL REVEAL ══
+function initReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+function addRevealClasses() {
+  // Títulos de sección
+  document.querySelectorAll('.seccion-h2-center, .sobre-title, .sobre-label').forEach(el => {
+    el.classList.add('reveal');
+  });
+
+  // Pasos
+  document.querySelectorAll('.paso').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // Pilares de beneficios
+  document.querySelectorAll('.beneficio').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // Categorías
+  document.querySelectorAll('.categoria-card').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${i + 1}`);
+  });
+
+  // FAQ items
+  document.querySelectorAll('.faq-item').forEach((el, i) => {
+    el.classList.add('reveal', `reveal-delay-${Math.min(i + 1, 3)}`);
+  });
+
+  // Sección vueltas SVG
+  const vueltas = document.querySelector('.vueltas-svg-wrap');
+  if (vueltas) vueltas.classList.add('reveal');
+
+  // CTA final
+  const cta = document.querySelector('.cta-final-inner');
+  if (cta) cta.classList.add('reveal');
+
+  initReveal();
+}
+
+// Iniciar reveal al cargar la página
+document.addEventListener('DOMContentLoaded', addRevealClasses);
+
