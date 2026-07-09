@@ -3640,7 +3640,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1100",
       "Producto": "Almohaditas Rellenas Sabor Chocolate",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "180",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3661,7 +3661,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1101",
       "Producto": "Almohaditas Rellenas Sabor Frutilla",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "180",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3682,7 +3682,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1115",
       "Producto": "Almohaditas Rellenas Sabor Limón",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "180",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3703,7 +3703,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1121",
       "Producto": "Copos Azucarados Fortificados",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "240",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3724,7 +3724,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1104",
       "Producto": "Bolitas de Chocolate",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "150",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3745,7 +3745,7 @@
       "Cat B2B": "ON",
       "Id_Proveedor": "YAR1106",
       "Producto": "Aritos Frutales",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "130",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -3766,7 +3766,7 @@
       "Cat B2B": "OFF",
       "Id_Proveedor": "YAR1125",
       "Producto": "Aritos de Avena y Miel",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Tamaño": "130",
       "UM": "g",
       "Categoria": "Desayuno y Mediatarde",
@@ -19680,13 +19680,6 @@
       "Subcategoria": "Conservas"
     },
     {
-      "Id_Grupo": "22",
-      "Nombre_Grupo": "Tomate Triturado",
-      "Marca": "INALPA",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
-    },
-    {
       "Id_Grupo": "23",
       "Nombre_Grupo": "Pate de Foie",
       "Marca": "SWIFT",
@@ -20016,11 +20009,11 @@
       "Subcategoria": "Harinas"
     },
     {
-      "Id_Grupo": "70",
+      "Id_Grupo": "83",
       "Nombre_Grupo": "Harina con Levadura Para Pizza",
       "Marca": "PUREZA",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
+      "Categoria": "Almacén",
+      "Subcategoria": "Harinas"
     },
     {
       "Id_Grupo": "71",
@@ -20403,35 +20396,35 @@
     {
       "Id_Grupo": "125",
       "Nombre_Grupo": "Almohaditas Rellenas",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Cereales"
     },
     {
       "Id_Grupo": "126",
       "Nombre_Grupo": "Copos Azucarados Fortificados",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Cereales"
     },
     {
       "Id_Grupo": "127",
       "Nombre_Grupo": "Bolitas de Chocolate",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Cereales"
     },
     {
       "Id_Grupo": "128",
       "Nombre_Grupo": "Aritos Frutales",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Cereales"
     },
     {
       "Id_Grupo": "129",
       "Nombre_Grupo": "Aritos de Avena y Miel",
-      "Marca": "YARIS",
+      "Marca": "YARI",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Cereales"
     },
@@ -20441,13 +20434,6 @@
       "Marca": "CHOCOLINO",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Chocolatadas"
-    },
-    {
-      "Id_Grupo": "131",
-      "Nombre_Grupo": "Leche Lista Pouch",
-      "Marca": "FRANZ",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
     },
     {
       "Id_Grupo": "132",
@@ -20562,13 +20548,6 @@
       "Subcategoria": "Galletitas"
     },
     {
-      "Id_Grupo": "148",
-      "Nombre_Grupo": "Vainillas Sueltas",
-      "Marca": "POZO",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
-    },
-    {
       "Id_Grupo": "149",
       "Nombre_Grupo": "Vainillas Chocolate 12u",
       "Marca": "POZO",
@@ -20623,13 +20602,6 @@
       "Marca": "POZO",
       "Categoria": "Desayuno y Mediatarde",
       "Subcategoria": "Magdalenas y Budines"
-    },
-    {
-      "Id_Grupo": "157",
-      "Nombre_Grupo": "Magdalena Clásica",
-      "Marca": "POZO",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
     },
     {
       "Id_Grupo": "158",
@@ -21120,13 +21092,6 @@
       "Marca": "ELEGANTE",
       "Categoria": "Limpieza",
       "Subcategoria": "Papel de Cocina"
-    },
-    {
-      "Id_Grupo": "228",
-      "Nombre_Grupo": "Bobina Toalla 2x300m",
-      "Marca": "ELEGANTE",
-      "Categoria": "#N/A",
-      "Subcategoria": "#N/A"
     },
     {
       "Id_Grupo": "229",
