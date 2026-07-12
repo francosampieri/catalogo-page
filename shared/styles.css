@@ -541,13 +541,13 @@ img { display: block; max-width: 100%; }
 .pasos-row {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: center;
   gap: var(--space-5);
 }
 
 .paso {
-  flex: 0 1 250px;
-  max-width: 250px;
+  flex: 1;
+  max-width: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -604,9 +604,8 @@ img { display: block; max-width: 100%; }
 .paso-arrow-wrap {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 64px;
-  flex: 1 1 32px;
+  flex-shrink: 0;
 }
 
 .paso-arrow {
