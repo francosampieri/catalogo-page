@@ -237,6 +237,7 @@ img { display: block; max-width: 100%; }
   transition: background var(--t), border-color var(--t), color var(--t);
 }
 .nav-pill:hover { background: var(--surface-2); }
+.nav-pill-icon { display: none; width: 16px; height: 16px; flex-shrink: 0; }
 .nav-dropdown.open .nav-pill {
   background: var(--accent);
   border-color: var(--accent);
@@ -519,7 +520,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .como-comprar-inner {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
 }
@@ -610,7 +611,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .vueltas-inner {
-  max-width: 960px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
 }
@@ -678,7 +679,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .beneficios-inner {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
 }
@@ -747,7 +748,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .categorias-home-inner {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
 }
@@ -851,7 +852,7 @@ img { display: block; max-width: 100%; }
 .cta-final-inner {
   position: relative;
   overflow: hidden;
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
   text-align: center;
@@ -901,7 +902,7 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 .faq-inner {
-  max-width: 680px;
+  max-width: 760px;
   margin: 0 auto;
   padding: var(--space-9) var(--space-5);
   display: grid;
@@ -1774,22 +1775,49 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 600px) {
-  .topbar-inner { padding: 0 var(--space-4); gap: var(--space-2); }
-  .search-wrap { max-width: none; }
-  .hide-mobile { display: none; }
+  .topbar { height: 60px; }
+  .topbar-inner { padding: 0 var(--space-3); gap: var(--space-2); }
+  .brand-logo { height: 30px; }
+  .topbar-middle { gap: var(--space-2); }
+  .search-wrap { max-width: none; min-width: 0; flex: 1 1 auto; }
+  .search-wrap input { padding-left: 30px; font-size: 0.8rem; }
+  .search-icon { left: 9px; }
+
+  /* Botón Catálogo pasa a ser solo ícono para ahorrar espacio */
+  .nav-pill { padding: 0 8px; gap: 0; }
+  .nav-pill-icon { display: block; }
+  .nav-pill-text, .nav-pill .chevron { display: none; }
   .nav-megamenu { left: var(--space-3); right: var(--space-3); }
   .megamenu-col { min-width: 120px; }
+
+  .cart-trigger { padding: 0 8px; margin-left: var(--space-2); }
+
+  .hide-mobile { display: none; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
   .filtros { padding: var(--space-2) var(--space-4); }
   .subfiltros { padding: var(--space-1) var(--space-4); }
-  .hero-title { font-size: 2.4rem; }
+  .hero-title { font-size: clamp(2rem, 10vw, 2.4rem); white-space: normal; }
   .faq-inner { padding: var(--space-8) var(--space-4); }
 
   .como-comprar-inner, .vueltas-inner, .beneficios-inner,
   .categorias-home-inner, .cta-final-inner { padding: var(--space-7) var(--space-4); }
   .beneficios-grid { grid-template-columns: repeat(2, 1fr); }
   .categorias-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Card expandida ocupa todo el ancho del grid para que entren los controles */
+  .card.expanded { grid-column: 1 / -1; }
+
+  /* Carrito: menos padding lateral para aprovechar el ancho */
+  .carrito-items { padding: var(--space-4) var(--space-4); }
+  .carrito-header { padding: var(--space-4) var(--space-4); }
+  .carrito-footer { padding: var(--space-4) var(--space-4); }
+}
+
+@media (max-width: 380px) {
+  .topbar-inner { padding: 0 var(--space-2); }
+  .brand-logo { height: 26px; }
+  .search-wrap input { padding: 0 var(--space-3) 0 28px; }
 }
 
 
@@ -1896,6 +1924,25 @@ img { display: block; max-width: 100%; }
 .hero-pill:nth-child(3) { animation-delay: 0.46s; }
 
 /* Respetar preferencia de movimiento reducido */
+/* ══════════════════════════════════════════════════════
+   PANTALLAS MUY ANCHAS (monitores de escritorio 1600px+)
+══════════════════════════════════════════════════════ */
+@media (min-width: 1600px) {
+  .topbar-inner,
+  .hero,
+  .catalogo-topbar-inner,
+  .filtros,
+  .subfiltros,
+  .catalogo-main { max-width: 1400px; }
+
+  .como-comprar-inner,
+  .beneficios-inner,
+  .categorias-home-inner { max-width: 1320px; }
+
+  .vueltas-inner { max-width: 1200px; }
+  .cta-final-inner { max-width: 1080px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
