@@ -332,6 +332,23 @@ img { display: block; max-width: 100%; }
 .megamenu-sub:hover { color: var(--accent); }
 
 /* Carrito trigger */
+.whatsapp-trigger {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-bg);
+  border-radius: var(--r2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  text-decoration: none;
+  transition: background var(--t), border-color var(--t), color var(--t), transform var(--t);
+  flex-shrink: 0;
+}
+.whatsapp-trigger:hover { background: var(--accent); border-color: var(--accent); color: white; transform: translateY(-1px); }
+.whatsapp-trigger svg { width: 18px; height: 18px; }
 .cart-trigger {
   position: relative;
   height: 36px;
@@ -888,6 +905,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: -0.03em;
   color: var(--t1);
 }
+.cta-final h2 strong { font: inherit; }
 
 
 /* ══════════════════════════════════════════════════════
@@ -1802,9 +1820,11 @@ img { display: block; max-width: 100%; }
   .nav-pill { padding: 0 8px; gap: 0; }
   .nav-pill-icon { display: block; }
   .nav-pill-text, .nav-pill .chevron { display: none; }
+  .nav-dropdown { display: none; }
   .hide-mobile { display: none; }
   .nav-megamenu { left: var(--space-3); right: var(--space-3); }
   .megamenu-col { min-width: 120px; }
+  .whatsapp-trigger { width: 34px; height: 34px; }
   .cart-trigger { padding: 0 8px; margin-left: var(--space-2); }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
@@ -1827,8 +1847,7 @@ img { display: block; max-width: 100%; }
   .hero-visual { position: absolute; inset: 0; min-height: 0; z-index: 0; background: var(--accent-2); }
   .hero-photo {
     inset: 0;
-    object-position: 48% center;
-    transform: scale(.94);
+    object-position: center;
     -webkit-mask-image: none;
     mask-image: none;
   }
@@ -1842,7 +1861,8 @@ img { display: block; max-width: 100%; }
   .hero-inner { position: relative; z-index: 2; flex: 1; justify-content: flex-start; padding: var(--space-6) var(--space-5); }
   .hero-title { font-size: clamp(2.25rem, 11vw, 2.8rem); white-space: normal; color: white; text-shadow: 0 2px 16px rgba(0, 0, 0, .22); margin-bottom: var(--space-4); }
   .hero-pills { gap: var(--space-2); margin-bottom: var(--space-5); }
-  .hero-pill { padding: 7px 13px 7px 10px; background: rgba(255, 255, 255, .92); font-size: .82rem; }
+  .hero-pill { padding: 7px 13px 7px 10px; background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .72); color: white; backdrop-filter: blur(4px); font-size: .82rem; }
+  .hero-pill svg { color: white; }
   .hero-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-top: auto; }
   .hero-actions .btn-primary, .hero-actions .btn-ghost-dark { width: 100%; }
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
@@ -1867,14 +1887,14 @@ img { display: block; max-width: 100%; }
   .vueltas-svg-wrap { display: none; }
   .vueltas-mobile { display: flex; flex-direction: column; gap: var(--space-3); max-width: 390px; margin: 0 auto; padding: var(--space-4); background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--r4); }
   .vueltas-mobile-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
-  .vueltas-mobile-list::before { content: 'Lo que dejás atrás'; grid-column: 1 / -1; color: var(--t3); font-size: .68rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
-  .vueltas-mobile-list li { display: flex; align-items: center; gap: 6px; color: var(--t3); font-size: .74rem; line-height: 1.25; text-decoration: line-through; text-decoration-thickness: 1.5px; }
-  .vueltas-mobile-list li::before { content: '×'; width: 16px; height: 16px; flex: 0 0 16px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-3); color: var(--t3); font-size: .82rem; font-weight: 600; }
+  .vueltas-mobile-list li { display: flex; align-items: center; gap: 6px; color: var(--t3); font-size: .74rem; line-height: 1.25; text-decoration: line-through; text-decoration-color: rgba(111, 116, 110, .45); text-decoration-thickness: .75px; }
+  .vueltas-mobile-list li::before { content: '×'; width: 16px; height: 16px; flex: 0 0 16px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-3); color: var(--t3); font-size: .82rem; font-weight: 600; text-decoration: none; }
   .vueltas-mobile-list li::after { content: none; }
   .vueltas-mobile-result { display: flex; flex-direction: row; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-4); border: 0; border-radius: var(--r3); background: var(--accent); color: white; }
-  .vueltas-mobile-result::before { content: '→'; width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.16); font-size: 1.15rem; }
+  .vueltas-mobile-result::before { content: '→'; width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.16); font-size: 1.15rem; line-height: 1; padding-bottom: 2px; }
   .vueltas-mobile-logo { display: none; }
-  .vueltas-mobile-result p { margin: 0; font-size: .84rem; line-height: 1.35; color: rgba(255,255,255,.82); }
+  .vueltas-mobile-result p { display: flex; flex-direction: column; gap: 2px; margin: 0; font-size: .84rem; line-height: 1.35; color: rgba(255,255,255,.82); }
+  .vueltas-mobile-result br { display: none; }
   .vueltas-mobile-result strong { display: block; color: white; font-size: 1rem; line-height: 1.18; }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
@@ -1882,7 +1902,9 @@ img { display: block; max-width: 100%; }
   .carrito-footer { padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px)); }
 
   /* Footer: jerarquía clara, navegación liviana y WhatsApp como acción principal. */
-  .cta-final h2 { font-size: clamp(.95rem, 4.3vw, 1.15rem); letter-spacing: -.04em; white-space: nowrap; }
+  .cta-final h2 { display: flex; flex-direction: column; align-items: center; gap: 0; font-size: 1.1rem; line-height: 1.05; letter-spacing: -.04em; }
+  .cta-final h2 span { font-weight: 500; }
+  .cta-final h2 strong { color: var(--accent); font-size: clamp(1.75rem, 9vw, 2.25rem); font-weight: 700; letter-spacing: -.055em; }
   .footer-inner { padding: var(--space-6) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)); text-align: center; }
   .footer-logo { margin: 0 auto var(--space-5); height: 32px; }
   .footer-nav { display: flex; justify-content: center; gap: 0 var(--space-4); margin-bottom: var(--space-5); }
