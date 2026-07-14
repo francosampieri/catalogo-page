@@ -518,7 +518,18 @@ function renderExpanded(gid, vars, imgEl) {
         chip.addEventListener('click', e => {
           e.stopPropagation();
           selVariante = val;
-          if (tieneDoble) selTamaño = null; // resetear tamaño al cambiar variante
+          if (tieneDoble) {
+            // Mantener el tamaño actual si sigue disponible para esta variante;
+            // si no, seleccionar automáticamente el primero disponible.
+            const tamsDisponibles = [...new Set(
+              vars.filter(v => v['Label_Variante'] === selVariante)
+                  .map(v => v['Label_Tamaño'])
+                  .filter(Boolean)
+            )];
+            if (!tamsDisponibles.includes(selTamaño)) {
+              selTamaño = tamsDisponibles[0] || null;
+            }
+          }
           dibujar();
         });
         wrap.appendChild(chip);
