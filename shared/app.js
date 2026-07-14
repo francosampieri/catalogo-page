@@ -459,9 +459,16 @@ function toggleCard(gid, vars, card, imgEl) {
     renderExpanded(gid, vars, imgEl);
     card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } else {
-    // Reanudar rotación
+    // Reanudar rotación, retomando desde la variante que quedó seleccionada
+    // manualmente (si la hay) en vez de un índice viejo.
     const vlabelEl = document.getElementById(`vlabel-${gid}`);
     const vprecioEl = document.getElementById(`vprecio-${gid}`);
+    if (rotaciones[gid] && vlabelEl) {
+      const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
+      rotaciones[gid].indexActual = idxActual >= 0 ? idxActual : 0;
+    }
+    imgEl.onload = null;
+    imgEl.onerror = null;
     if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
   }
 }
@@ -497,6 +504,23 @@ function renderExpanded(gid, vars, imgEl) {
     if (soloPorTamaño)   return !!selTamaño;
     if (tieneDoble)      return !!selVariante && !!selTamaño;
     return true;
+  }
+
+  // Al cerrar la card, la rotación automática debe retomar desde la variante
+  // que quedó seleccionada manualmente (si había una), no desde un índice viejo.
+  // Si no hay ninguna completa, arranca desde 0 como antes.
+  function sincronizarIndiceRotacionYReanudar(imgElLocal) {
+    const varSel = getVarianteSeleccionada();
+    const idx = varSel ? vars.indexOf(varSel) : 0;
+    if (rotaciones[gid]) {
+      rotaciones[gid].indexActual = idx >= 0 ? idx : 0;
+    }
+    // Limpiar handlers de imagen dejados por la selección manual, para que
+    // el próximo ciclo de rotación dispare correctamente onload/onerror.
+    if (imgElLocal) {
+      imgElLocal.onload = null;
+      imgElLocal.onerror = null;
+    }
   }
 
   function dibujar() {
@@ -677,6 +701,7 @@ function renderExpanded(gid, vars, imgEl) {
       const card = document.getElementById(`card-${gid}`);
       card.classList.remove('expanded');
       expanded.innerHTML = '';
+      sincronizarIndiceRotacionYReanudar(imgEl);
       const vlabelEl  = document.getElementById(`vlabel-${gid}`);
       const vprecioEl = document.getElementById(`vprecio-${gid}`);
       if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
