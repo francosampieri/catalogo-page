@@ -144,9 +144,11 @@ img { display: block; max-width: 100%; }
 }
 
 .topbar-inner {
-  max-width: var(--content-wide);
-  margin: 0 auto;
-  padding: 0 var(--space-5);
+  /* La topbar debe pegarse al borde real del viewport: usa solo un padding
+     fijo y chico, sin el límite de --content-wide (ese gutter es para las
+     secciones de lectura, no para la barra superior). */
+  width: 100%;
+  padding: 0 var(--space-4);
   height: 100%;
   display: flex;
   align-items: center;
@@ -332,23 +334,26 @@ img { display: block; max-width: 100%; }
 .megamenu-sub:hover { color: var(--accent); }
 
 /* Carrito trigger */
+/* Botón de WhatsApp: mismo lenguaje visual que el resto de los íconos de la
+   topbar (fondo suave + borde, sólido al hover), pero con el verde propio
+   de WhatsApp para que se reconozca de un vistazo. */
 .whatsapp-trigger {
   width: 36px;
   height: 36px;
   padding: 0;
-  border: 1px solid var(--accent-line);
-  background: var(--accent-bg);
+  border: 1px solid rgba(37,211,102,.35);
+  background: rgba(37,211,102,.12);
   border-radius: var(--r2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  color: var(--wa);
   text-decoration: none;
   transition: background var(--t), border-color var(--t), color var(--t), transform var(--t);
   flex-shrink: 0;
 }
-.whatsapp-trigger:hover { background: var(--accent); border-color: var(--accent); color: white; transform: translateY(-1px); }
-.whatsapp-trigger svg { width: 18px; height: 18px; }
+.whatsapp-trigger:hover { background: var(--wa); border-color: var(--wa); color: white; transform: translateY(-1px); }
+.whatsapp-trigger svg { width: 19px; height: 19px; }
 .cart-trigger {
   position: relative;
   height: 36px;
@@ -905,7 +910,13 @@ img { display: block; max-width: 100%; }
   letter-spacing: -0.03em;
   color: var(--t1);
 }
-.cta-final h2 strong { font: inherit; }
+/* Frase clave destacada, igual concepto que en móvil pero en línea,
+   sin apilar, ya que en escritorio/tablet hay ancho de sobra. */
+.cta-final h2 strong {
+  font: inherit;
+  color: var(--accent);
+  font-weight: 700;
+}
 
 
 /* ══════════════════════════════════════════════════════
@@ -1831,7 +1842,7 @@ img { display: block; max-width: 100%; }
   .catalogo-topbar-inner { padding: 0 var(--space-4); }
   .filtros { padding: var(--space-2) var(--space-4); }
   .subfiltros { padding: var(--space-1) var(--space-4); }
-  .filtro-btn { height: 36px; }
+  .filtro-btn { height: 36px; background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
   .subfiltro-btn { height: 34px; }
   .qty-btn { width: 36px; height: 36px; }
   .qty-num { width: 36px; }

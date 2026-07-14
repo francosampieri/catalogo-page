@@ -976,6 +976,18 @@ document.getElementById('buscador').addEventListener('input', function() {
   renderGrupos();
 });
 
+// En pantallas chicas el placeholder completo no se alcanza a leer,
+// así que se usa una versión corta.
+(function ajustarPlaceholderBuscador() {
+  const input = document.getElementById('buscador');
+  const mq = window.matchMedia('(max-width: 600px)');
+  const actualizar = () => {
+    input.placeholder = mq.matches ? 'Buscar producto' : 'Buscar en el catálogo…';
+  };
+  actualizar();
+  mq.addEventListener('change', actualizar);
+})();
+
 // ══ INIT ══
 cargarDatos();
 
