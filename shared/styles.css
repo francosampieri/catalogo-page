@@ -335,13 +335,13 @@ img { display: block; max-width: 100%; }
 
 /* Carrito trigger */
 /* Botón de WhatsApp: mismo lenguaje visual que el resto de los íconos de la
-   topbar (fondo suave + borde, sólido al hover), pero con el verde propio
-   de WhatsApp para que se reconozca de un vistazo. */
+   topbar (fondo suave + borde, sólido al hover). Borde en prueba con el
+   verde oliva principal de la marca (antes era el verde propio de WhatsApp). */
 .whatsapp-trigger {
   width: 36px;
   height: 36px;
   padding: 0;
-  border: 1px solid rgba(37,211,102,.35);
+  border: 1px solid var(--accent);
   background: rgba(37,211,102,.12);
   border-radius: var(--r2);
   display: flex;
@@ -354,6 +354,15 @@ img { display: block; max-width: 100%; }
 }
 .whatsapp-trigger:hover { background: var(--wa); border-color: var(--wa); color: white; transform: translateY(-1px); }
 .whatsapp-trigger svg { width: 19px; height: 19px; }
+
+/* Separador entre WhatsApp y Carrito: deja claro que son dos acciones
+   aisladas entre sí, no un mismo grupo de botones. */
+.topbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--line);
+  flex-shrink: 0;
+}
 .cart-trigger {
   position: relative;
   height: 36px;
@@ -367,7 +376,6 @@ img { display: block; max-width: 100%; }
   color: var(--t2);
   transition: background var(--t), border-color var(--t), color var(--t);
   flex-shrink: 0;
-  margin-left: var(--space-4);
 }
 .cart-trigger svg { width: 17px; height: 17px; flex-shrink: 0; }
 .cart-trigger:hover { background: var(--surface-2); color: var(--t1); }
@@ -1836,7 +1844,7 @@ img { display: block; max-width: 100%; }
   .nav-megamenu { left: var(--space-3); right: var(--space-3); }
   .megamenu-col { min-width: 120px; }
   .whatsapp-trigger { width: 34px; height: 34px; }
-  .cart-trigger { padding: 0 8px; margin-left: var(--space-2); }
+  .cart-trigger { padding: 0 8px; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
   .catalogo-main { padding: var(--space-4) var(--space-4) 100px; }
   .catalogo-topbar-inner { padding: 0 var(--space-4); }
@@ -1932,7 +1940,7 @@ img { display: block; max-width: 100%; }
   .topbar-middle { gap: var(--space-1); }
   .search-wrap input { height: 34px; padding: 0 var(--space-3) 0 28px; }
   .nav-pill { height: 32px; padding: 0 7px; }
-  .cart-trigger { height: 34px; padding: 0 6px; margin-left: var(--space-1); }
+  .cart-trigger { height: 34px; padding: 0 6px; }
 }
 
 
