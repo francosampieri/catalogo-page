@@ -442,6 +442,28 @@ function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl) {
   }, 3000);
 }
 
+// Sincroniza el índice de rotación de una card con la variante que haya
+// quedado visible (elegida manualmente o no) y reanuda su rotación
+// automática. Se usa siempre que una card se cierra, sea por su propio
+// botón/click o porque se abrió otra card distinta.
+function sincronizarYReanudarRotacion(gid) {
+  const vars = catalogo[gid];
+  if (!vars || !vars.length) return;
+  const imgEl = document.querySelector(`#card-${gid} .card-img-wrap img`);
+  const vlabelEl = document.getElementById(`vlabel-${gid}`);
+  const vprecioEl = document.getElementById(`vprecio-${gid}`);
+
+  if (rotaciones[gid] && vlabelEl) {
+    const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
+    rotaciones[gid].indexActual = idxActual >= 0 ? idxActual : 0;
+  }
+  if (imgEl) {
+    imgEl.onload = null;
+    imgEl.onerror = null;
+  }
+  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+}
+
 function toggleCard(gid, vars, card, imgEl) {
   const estaExpandida = card.classList.contains('expanded');
 
@@ -451,6 +473,9 @@ function toggleCard(gid, vars, card, imgEl) {
     const id = c.id.replace('card-', '');
     const exp = document.getElementById(`exp-${id}`);
     if (exp) exp.innerHTML = '';
+    // Reanudar rotación de cualquier otra card que se esté cerrando acá
+    // (por ejemplo, al abrir una card distinta mientras esta quedó expandida)
+    if (id !== gid) sincronizarYReanudarRotacion(id);
   });
 
   if (!estaExpandida) {
@@ -461,15 +486,7 @@ function toggleCard(gid, vars, card, imgEl) {
   } else {
     // Reanudar rotación, retomando desde la variante que quedó seleccionada
     // manualmente (si la hay) en vez de un índice viejo.
-    const vlabelEl = document.getElementById(`vlabel-${gid}`);
-    const vprecioEl = document.getElementById(`vprecio-${gid}`);
-    if (rotaciones[gid] && vlabelEl) {
-      const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
-      rotaciones[gid].indexActual = idxActual >= 0 ? idxActual : 0;
-    }
-    imgEl.onload = null;
-    imgEl.onerror = null;
-    if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+    sincronizarYReanudarRotacion(gid);
   }
 }
 
@@ -504,23 +521,6 @@ function renderExpanded(gid, vars, imgEl) {
     if (soloPorTamaño)   return !!selTamaño;
     if (tieneDoble)      return !!selVariante && !!selTamaño;
     return true;
-  }
-
-  // Al cerrar la card, la rotación automática debe retomar desde la variante
-  // que quedó seleccionada manualmente (si había una), no desde un índice viejo.
-  // Si no hay ninguna completa, arranca desde 0 como antes.
-  function sincronizarIndiceRotacionYReanudar(imgElLocal) {
-    const varSel = getVarianteSeleccionada();
-    const idx = varSel ? vars.indexOf(varSel) : 0;
-    if (rotaciones[gid]) {
-      rotaciones[gid].indexActual = idx >= 0 ? idx : 0;
-    }
-    // Limpiar handlers de imagen dejados por la selección manual, para que
-    // el próximo ciclo de rotación dispare correctamente onload/onerror.
-    if (imgElLocal) {
-      imgElLocal.onload = null;
-      imgElLocal.onerror = null;
-    }
   }
 
   function dibujar() {
@@ -701,10 +701,7 @@ function renderExpanded(gid, vars, imgEl) {
       const card = document.getElementById(`card-${gid}`);
       card.classList.remove('expanded');
       expanded.innerHTML = '';
-      sincronizarIndiceRotacionYReanudar(imgEl);
-      const vlabelEl  = document.getElementById(`vlabel-${gid}`);
-      const vprecioEl = document.getElementById(`vprecio-${gid}`);
-      if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+      sincronizarYReanudarRotacion(gid);
     });
     expanded.appendChild(cerrarBtn);
   }
