@@ -1909,17 +1909,90 @@ img { display: block; max-width: 100%; }
   .categoria-card span { text-align: left; font-size: .86rem; }
   .categoria-arrow { opacity: 1; transform: none; margin: 0 0 0 auto; }
   .vueltas-svg-wrap { display: none; }
-  .vueltas-mobile { display: flex; flex-direction: column; gap: var(--space-3); max-width: 390px; margin: 0 auto; padding: var(--space-4); background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--r4); }
-  .vueltas-mobile-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
-  .vueltas-mobile-list li { display: flex; align-items: center; gap: 6px; color: var(--t3); font-size: .74rem; line-height: 1.25; text-decoration: line-through; text-decoration-color: rgba(111, 116, 110, .45); text-decoration-thickness: .75px; }
-  .vueltas-mobile-list li::before { content: '×'; width: 16px; height: 16px; flex: 0 0 16px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-3); color: var(--t3); font-size: .82rem; font-weight: 600; text-decoration: none; }
-  .vueltas-mobile-list li::after { content: none; }
-  .vueltas-mobile-result { display: flex; flex-direction: row; align-items: center; gap: var(--space-3); margin: 0; padding: var(--space-4); border: 0; border-radius: var(--r3); background: var(--accent); color: white; }
-  .vueltas-mobile-result::before { content: '→'; width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.16); font-size: 1.15rem; line-height: 1; padding-bottom: 2px; }
-  .vueltas-mobile-logo { display: none; }
-  .vueltas-mobile-result p { display: flex; flex-direction: column; gap: 2px; margin: 0; font-size: .84rem; line-height: 1.35; color: rgba(255,255,255,.82); }
-  .vueltas-mobile-result br { display: none; }
-  .vueltas-mobile-result strong { display: block; color: white; font-size: 1rem; line-height: 1.18; }
+  .vueltas-mobile {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-5) var(--space-5);
+    background: var(--surface);
+    border-radius: var(--r3);
+    box-shadow: var(--s3);
+  }
+  /* Borde perforado arriba y abajo, como un tique */
+  .vueltas-mobile::before, .vueltas-mobile::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 14px;
+    background-image: radial-gradient(circle at 8px 8px, var(--surface-2) 6px, transparent 7px);
+    background-size: 16px 16px;
+    background-repeat: repeat-x;
+  }
+  .vueltas-mobile::before { top: -1px; }
+  .vueltas-mobile::after { bottom: -1px; transform: rotate(180deg); }
+
+  .vueltas-ticket-heading {
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: .78rem;
+    color: var(--t3);
+    letter-spacing: .04em;
+    margin-bottom: var(--space-4);
+  }
+  .vueltas-ticket-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 7px 0;
+    color: var(--t3);
+    font-size: .86rem;
+  }
+  .vueltas-ticket-dots {
+    flex: 1;
+    border-bottom: 1.5px dotted var(--line);
+    transform: translateY(-3px);
+  }
+  .vueltas-ticket-name {
+    text-decoration: line-through;
+    text-decoration-color: rgba(111, 116, 110, .4);
+    white-space: nowrap;
+  }
+  .vueltas-ticket-mark {
+    color: var(--t3);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .vueltas-ticket-divider {
+    border: none;
+    border-top: 1.5px dashed var(--line-soft);
+    margin: var(--space-4) 0;
+  }
+  .vueltas-ticket-stamp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-3);
+    border: 2px dashed var(--accent);
+    border-radius: var(--r3);
+    transform: rotate(-1.5deg);
+  }
+  .vueltas-ticket-stamp-text strong {
+    display: block;
+    color: var(--accent-2);
+    font-size: .95rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+  .vueltas-ticket-stamp-text span {
+    display: block;
+    font-size: .8rem;
+    color: var(--t2);
+    font-family: var(--font-body);
+    margin-top: 2px;
+  }
   .card.expanded { grid-column: 1 / -1; }
   .carrito-items { padding: var(--space-4); }
   .carrito-header { padding: var(--space-4); }
