@@ -456,29 +456,29 @@ img { display: block; max-width: 100%; }
 
 .hero-pills {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-6);
   margin-bottom: var(--space-7);
 }
 
 .hero-pill {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 18px 9px 12px;
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-line);
-  border-radius: var(--rf);
-  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  border-radius: 0;
+  padding: 2px 4px 5px 4px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--t1);
 }
+/* El ícono se mantiene en el HTML solo para el diseño de las pills en
+   móvil (ver media query); en el resto de las versiones no se muestra. */
 .hero-pill svg {
-  width: 16px;
-  height: 16px;
-  color: var(--accent);
-  flex-shrink: 0;
+  display: none;
 }
 
 .hero-actions {
@@ -1884,9 +1884,9 @@ img { display: block; max-width: 100%; }
   }
   .hero-inner { position: relative; z-index: 2; flex: 1; justify-content: flex-start; padding: var(--space-6) var(--space-5); }
   .hero-title { font-size: clamp(2.25rem, 11vw, 2.8rem); white-space: normal; color: white; text-shadow: 0 2px 16px rgba(0, 0, 0, .22); margin-bottom: var(--space-4); }
-  .hero-pills { gap: var(--space-2); margin-bottom: var(--space-5); }
-  .hero-pill { padding: 7px 13px 7px 10px; background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .72); color: white; backdrop-filter: blur(4px); font-size: .82rem; }
-  .hero-pill svg { color: white; }
+  .hero-pills { flex-direction: column; align-items: flex-start; gap: var(--space-2); margin-bottom: var(--space-5); }
+  .hero-pill { display: inline-flex; align-items: center; gap: 10px; padding: 7px 13px 7px 10px; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .72); border-bottom: 1px solid rgba(255, 255, 255, .72); border-radius: var(--rf); color: white; backdrop-filter: blur(4px); font-size: .82rem; }
+  .hero-pill svg { display: block; width: 16px; height: 16px; color: white; flex-shrink: 0; }
   .hero-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); margin-top: auto; }
   .hero-actions .btn-primary, .hero-actions .btn-ghost-dark { width: 100%; }
   .hero-actions .btn-ghost-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .75); color: white; backdrop-filter: blur(4px); }
