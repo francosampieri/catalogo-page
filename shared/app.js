@@ -250,7 +250,10 @@ function buildVarianteLabel(v, vars) {
   const partes = [];
   if (v['Label_Variante']) partes.push(v['Label_Variante']);
   if (v['Label_Tamaño'])   partes.push(v['Label_Tamaño']);
-  else if (vars.length === 1 && v['Tamaño'] && v['UM']) partes.push(`${v['Tamaño']} ${v['UM']}`);
+  // Si el tamaño no varía entre variantes (no hay Label_Tamaño), igual hay
+  // que mostrarlo: el usuario necesita saber qué tamaño está comprando,
+  // tenga o no el producto variantes de otro tipo (color, sabor, etc.).
+  else if (v['Tamaño'] && v['UM']) partes.push(`${v['Tamaño']} ${v['UM']}`);
   return partes.join(' · ');
 }
 
