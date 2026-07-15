@@ -335,32 +335,35 @@ img { display: block; max-width: 100%; }
 
 /* Carrito trigger */
 /* Botón de WhatsApp: mismo lenguaje visual que el resto de los íconos de la
-   topbar (fondo suave + borde, sólido al hover). Borde en prueba con el
-   verde oliva principal de la marca (antes era el verde propio de WhatsApp). */
+   topbar (fondo suave + borde, sólido al hover). Icono en verde oliva de
+   marca (no el verde característico de WhatsApp). Va pegado al carrito,
+   sin repartirse espacio con el resto de la topbar como los demás elementos. */
 .whatsapp-trigger {
   width: 36px;
   height: 36px;
   padding: 0;
-  border: 1px solid var(--accent);
-  background: rgba(37,211,102,.12);
+  border: 1px solid var(--line);
+  background: var(--surface);
   border-radius: var(--r2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--wa);
+  color: var(--accent);
   text-decoration: none;
   transition: background var(--t), border-color var(--t), color var(--t), transform var(--t);
   flex-shrink: 0;
 }
-.whatsapp-trigger:hover { background: var(--wa); border-color: var(--wa); color: white; transform: translateY(-1px); }
+.whatsapp-trigger:hover { background: var(--surface-2); color: var(--t1); }
 .whatsapp-trigger svg { width: 19px; height: 19px; }
 
-/* Separador entre WhatsApp y Carrito: deja claro que son dos acciones
-   aisladas entre sí, no un mismo grupo de botones. */
-.topbar-divider {
-  width: 1px;
-  height: 22px;
-  background: var(--line);
+/* Agrupa WhatsApp y carrito: van pegados entre sí (gap chico propio) y
+   empujados al borde derecho, a diferencia del resto de los elementos de
+   la topbar que se reparten el espacio disponible. */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 .cart-trigger {
