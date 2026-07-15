@@ -269,7 +269,8 @@ img { display: block; max-width: 100%; }
 .nav-megamenu {
   display: none;
   position: fixed;
-  left: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
   width: max-content;
   max-width: calc(100vw - var(--space-4) * 2);
   background: var(--surface);
@@ -1845,7 +1846,7 @@ img { display: block; max-width: 100%; }
   .nav-pill-text, .nav-pill .chevron { display: none; }
   .nav-dropdown { display: none; }
   .hide-mobile { display: none; }
-  .nav-megamenu { left: var(--space-3); max-width: calc(100vw - var(--space-3) * 2); }
+  .nav-megamenu { max-width: calc(100vw - var(--space-3) * 2); }
   .megamenu-col { min-width: 120px; }
   .whatsapp-trigger { width: 34px; height: 34px; }
   .cart-trigger { padding: 0 8px; }
