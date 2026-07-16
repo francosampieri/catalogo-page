@@ -165,8 +165,7 @@ img { display: block; max-width: 100%; }
   padding: 0;
   flex-shrink: 0;
   text-decoration: none;
-}
-.brand-logo {
+}.brand-logo {
   height: 44px;
   width: auto;
   display: block;
@@ -235,7 +234,7 @@ img { display: block; max-width: 100%; }
 .nav-ghost:hover { background: var(--surface-2); color: var(--t1); }
 
 /* Dropdown catálogo */
-.nav-dropdown { position: relative; }
+.nav-dropdown { position: relative; flex-shrink: 0; }
 
 .nav-pill {
   height: 34px;
@@ -1820,7 +1819,12 @@ img { display: block; max-width: 100%; }
   .hero { flex-direction: column; min-height: unset; }
   .hero-inner { padding: var(--space-7) var(--space-4); max-width: none; }
   .hero-visual { min-height: 280px; width: 100%; }
-  .hero-photo { position: absolute; }
+  .hero-photo {
+    position: absolute;
+    object-position: center 65%;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
   .faq-inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .faq-header { position: static; }
 
@@ -1831,6 +1835,17 @@ img { display: block; max-width: 100%; }
 
   .beneficios-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6) var(--space-4); }
   .categorias-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Zona intermedia (tablet / ventana achicada): el buscador ya se encogió
+   a su mínimo y no hay más margen — achicamos el botón de Catálogo a
+   ícono-solo antes de que compita por espacio con el resto de la topbar.
+   El dropdown se mantiene funcional, solo cambia su tamaño. */
+@media (max-width: 760px) {
+  .topbar-inner { gap: var(--space-3); }
+  .nav-pill { padding: 0 8px; gap: 0; }
+  .nav-pill-icon { display: block; }
+  .nav-pill-text, .nav-pill .chevron { display: none; }
 }
 
 @media (max-width: 600px) {
