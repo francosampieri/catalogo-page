@@ -8,7 +8,7 @@
 /* ── Tokens ── */
 :root {
   /* Ancho para las secciones visuales en escritorio: deja aire sin encajonar
-     la interfaz en el centro de monitores grandes. */
+     la interfaz en el centro de monitores grandes.*/
   --content-gutter: 24px;
   --content-wide: min(1280px, calc(100% - var(--content-gutter) - var(--content-gutter)));
   /* Superficies */
