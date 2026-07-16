@@ -1,5 +1,5 @@
 // ══ CONFIGURACIÓN ══
-const WHATSAPP_NUM = '5491112345678'; // reemplazar con número real
+const WHATSAPP_NUM = '5492617716916'; // reemplazar con número real
 
 // CANAL lo define cada página (B2C o B2B) con <script>window.CANAL='B2C'</script>
 // ANTES de cargar este archivo. Fallback a B2C por seguridad si no se definió.
@@ -250,7 +250,10 @@ function buildVarianteLabel(v, vars) {
   const partes = [];
   if (v['Label_Variante']) partes.push(v['Label_Variante']);
   if (v['Label_Tamaño'])   partes.push(v['Label_Tamaño']);
-  else if (vars.length === 1 && v['Tamaño'] && v['UM']) partes.push(`${v['Tamaño']} ${v['UM']}`);
+  // Si el tamaño no varía entre variantes (no hay Label_Tamaño), igual hay
+  // que mostrarlo: el usuario necesita saber qué tamaño está comprando,
+  // tenga o no el producto variantes de otro tipo (color, sabor, etc.).
+  else if (v['Tamaño'] && v['UM']) partes.push(`${v['Tamaño']} ${v['UM']}`);
   return partes.join(' · ');
 }
 
@@ -442,6 +445,28 @@ function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl) {
   }, 3000);
 }
 
+// Sincroniza el índice de rotación de una card con la variante que haya
+// quedado visible (elegida manualmente o no) y reanuda su rotación
+// automática. Se usa siempre que una card se cierra, sea por su propio
+// botón/click o porque se abrió otra card distinta.
+function sincronizarYReanudarRotacion(gid) {
+  const vars = catalogo[gid];
+  if (!vars || !vars.length) return;
+  const imgEl = document.querySelector(`#card-${gid} .card-img-wrap img`);
+  const vlabelEl = document.getElementById(`vlabel-${gid}`);
+  const vprecioEl = document.getElementById(`vprecio-${gid}`);
+
+  if (rotaciones[gid] && vlabelEl) {
+    const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
+    rotaciones[gid].indexActual = idxActual >= 0 ? idxActual : 0;
+  }
+  if (imgEl) {
+    imgEl.onload = null;
+    imgEl.onerror = null;
+  }
+  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+}
+
 function toggleCard(gid, vars, card, imgEl) {
   const estaExpandida = card.classList.contains('expanded');
 
@@ -451,6 +476,9 @@ function toggleCard(gid, vars, card, imgEl) {
     const id = c.id.replace('card-', '');
     const exp = document.getElementById(`exp-${id}`);
     if (exp) exp.innerHTML = '';
+    // Reanudar rotación de cualquier otra card que se esté cerrando acá
+    // (por ejemplo, al abrir una card distinta mientras esta quedó expandida)
+    if (id !== gid) sincronizarYReanudarRotacion(id);
   });
 
   if (!estaExpandida) {
@@ -459,10 +487,9 @@ function toggleCard(gid, vars, card, imgEl) {
     renderExpanded(gid, vars, imgEl);
     card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } else {
-    // Reanudar rotación
-    const vlabelEl = document.getElementById(`vlabel-${gid}`);
-    const vprecioEl = document.getElementById(`vprecio-${gid}`);
-    if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+    // Reanudar rotación, retomando desde la variante que quedó seleccionada
+    // manualmente (si la hay) en vez de un índice viejo.
+    sincronizarYReanudarRotacion(gid);
   }
 }
 
@@ -482,6 +509,7 @@ function renderExpanded(gid, vars, imgEl) {
 
   let selVariante = null;
   let selTamaño   = null;
+  let esPrimeraDibujada = true;
 
   function getVarianteSeleccionada() {
     if (esUnico) return vars[0];
@@ -518,7 +546,18 @@ function renderExpanded(gid, vars, imgEl) {
         chip.addEventListener('click', e => {
           e.stopPropagation();
           selVariante = val;
-          if (tieneDoble) selTamaño = null; // resetear tamaño al cambiar variante
+          if (tieneDoble) {
+            // Mantener el tamaño actual si sigue disponible para esta variante;
+            // si no, seleccionar automáticamente el primero disponible.
+            const tamsDisponibles = [...new Set(
+              vars.filter(v => v['Label_Variante'] === selVariante)
+                  .map(v => v['Label_Tamaño'])
+                  .filter(Boolean)
+            )];
+            if (!tamsDisponibles.includes(selTamaño)) {
+              selTamaño = tamsDisponibles[0] || null;
+            }
+          }
           dibujar();
         });
         wrap.appendChild(chip);
@@ -563,21 +602,16 @@ function renderExpanded(gid, vars, imgEl) {
     const precioDto = varSel ? parsePrecio(varSel['Precio_Dto'])   : null;
     const uniDto    = varSel ? (parseInt(varSel['Uni Dto']) || 0)  : 0;
 
-    // Sincronizar la parte de arriba de la card (label y precio) con la variante elegida
+    // Sincronizar la parte de arriba de la card (label, precio e imagen) con
+    // la variante elegida, usando la misma animación de deslizamiento que la
+    // rotación automática (excepto en el primer render, que no debe animar).
     if (varSel) {
       const vlabelEl  = document.getElementById(`vlabel-${gid}`);
       const vprecioEl = document.getElementById(`vprecio-${gid}`);
-      if (vlabelEl) vlabelEl.textContent = buildVarianteLabel(varSel, vars);
-      if (vprecioEl) {
-        if (precio !== null) {
-          vprecioEl.textContent = formatPrecio(precio);
-          vprecioEl.className = 'card-precio';
-        } else {
-          vprecioEl.textContent = 'Precio a confirmar';
-          vprecioEl.className = 'card-precio sin-precio';
-        }
-      }
+      const idxSel = vars.indexOf(varSel);
+      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, !esPrimeraDibujada);
     }
+    esPrimeraDibujada = false;
 
     const pdiv = document.createElement('div');
     pdiv.className = 'precio-detalle';
@@ -594,23 +628,7 @@ function renderExpanded(gid, vars, imgEl) {
       expanded.appendChild(dtoDiv);
     }
 
-    // Actualizar imagen al seleccionar variante
-    if (varSel && imgEl) {
-      const url = varSel['Imagen']?.trim();
-      const placeholder = imgEl.previousElementSibling;
-      if (url) {
-        imgEl.onload  = () => { imgEl.style.display = 'block'; if (placeholder) placeholder.style.display = 'none'; };
-        imgEl.onerror = () => { imgEl.style.display = 'none';  if (placeholder) placeholder.style.display = 'flex'; };
-        if (imgEl.src === url && imgEl.complete) {
-          imgEl.style.display = 'block';
-          if (placeholder) placeholder.style.display = 'none';
-        } else {          imgEl.src = url;
-        }
-      } else {
-        imgEl.style.display = 'none';
-        if (placeholder) placeholder.style.display = 'flex';
-      }
-    }
+    // (La imagen ya se actualiza junto con label y precio arriba, con animación)
 
     // Cantidad + agregar
     const qtyRow = document.createElement('div');
@@ -666,9 +684,7 @@ function renderExpanded(gid, vars, imgEl) {
       const card = document.getElementById(`card-${gid}`);
       card.classList.remove('expanded');
       expanded.innerHTML = '';
-      const vlabelEl  = document.getElementById(`vlabel-${gid}`);
-      const vprecioEl = document.getElementById(`vprecio-${gid}`);
-      if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+      sincronizarYReanudarRotacion(gid);
     });
     expanded.appendChild(cerrarBtn);
   }
@@ -962,6 +978,18 @@ document.getElementById('buscador').addEventListener('input', function() {
   }
   renderGrupos();
 });
+
+// En pantallas chicas el placeholder completo no se alcanza a leer,
+// así que se usa una versión corta.
+(function ajustarPlaceholderBuscador() {
+  const input = document.getElementById('buscador');
+  const mq = window.matchMedia('(max-width: 600px)');
+  const actualizar = () => {
+    input.placeholder = mq.matches ? 'Buscar producto' : 'Buscar en el catálogo…';
+  };
+  actualizar();
+  mq.addEventListener('change', actualizar);
+})();
 
 // ══ INIT ══
 cargarDatos();

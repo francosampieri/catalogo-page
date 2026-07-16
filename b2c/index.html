@@ -30,7 +30,8 @@
 
       <div class="nav-dropdown" id="navDropdown">
         <button class="nav-pill" onclick="toggleMegamenu()">
-          Catálogo
+          <svg class="nav-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span class="nav-pill-text">Catálogo</span>
           <svg class="chevron" viewBox="0 0 16 16" fill="none">
             <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -45,15 +46,24 @@
       <button class="nav-ghost hide-mobile" onclick="scrollLanding('faq')">Preguntas</button>
     </div>
 
-    <button class="cart-trigger" onclick="abrirCarrito()">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <span class="cart-label hide-mobile">Carrito</span>
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
+    <div class="topbar-actions">
+      <a class="whatsapp-trigger" href="https://wa.me/5492617716916?text=Hola%2C%20quiero%20hacer%20una%20consulta%20sobre%20Menos%20Vueltas." target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+          <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
+        </svg>
+      </a>
+
+      <button class="cart-trigger" onclick="abrirCarrito()">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="cart-label hide-mobile">Carrito</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
 
   </div>
 </header>
@@ -162,7 +172,7 @@
 
       <div class="nosotros-intro">
         <p class="nosotros-eyebrow">Nosotros</p>
-        <h3 class="nosotros-title">Comprar deberia ser más simple</h3>
+        <h3 class="nosotros-title">Comprar debería ser más simple</h3>
         <p class="nosotros-text">Por eso nació Menos Vueltas.</p>
         <p class="nosotros-text">Creemos que hacer las compras no tendría que significar perder tiempo. Comprar puede ser una tarea simple.<br>Elegís lo que necesitás, nos enviás el pedido y nosotros hacemos el resto.</p>
         <p class="nosotros-text">Y todo eso, sin hacerte pagar de más</p>
@@ -249,6 +259,26 @@
           <text x="668" y="221" font-size="13" fill="#2F3430" font-family="DM Sans, sans-serif" font-weight="600">enviá y recibí.</text>
 
         </svg>
+      </div>
+
+      <div class="vueltas-mobile" aria-label="Pasos que evitás al comprar con Menos Vueltas">
+        <p class="vueltas-ticket-heading">Tu compra sin Menos Vueltas</p>
+
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Ir al mayorista</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Buscar estacionamiento</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Recorrer góndolas</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Hacer fila</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Cargar bolsas</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+        <div class="vueltas-ticket-line"><span class="vueltas-ticket-name">Volver a casa</span><span class="vueltas-ticket-dots"></span><span class="vueltas-ticket-mark">✕</span></div>
+
+        <hr class="vueltas-ticket-divider">
+
+        <div class="vueltas-ticket-stamp">
+          <div class="vueltas-ticket-stamp-text">
+            <strong>Elegí, enviá y recibí.</strong>
+            <span>Nosotros hacemos el resto.</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -394,38 +424,38 @@
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cómo hago un pedido?</span>
+            <span>Cómo hago un pedido</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Elegís los productos desde el catálogo, los agregás al carrito y al finalizar
-            te redirigimos a WhatsApp con el pedido ya armado. Nosotros lo confirmamos y coordinamos la entrega.
+            Elegís los productos desde el catálogo, los agregás al carrito y al finalizar te redirige a WhatsApp
+            con el pedido ya armado y los precios calculados. Nosotros lo confirmamos y coordinamos la entrega.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cuándo llega mi pedido?</span>
+            <span>Cuándo llega mi pedido</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Coordinamos la entrega según tu zona y tus horarios. Normalmente entre 24 a 48 horas.
+            Coordinamos la entrega lo más rápido posible. Normalmente entre 24 y 48 horas.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿Cuándo pago?</span>
+            <span>Cuándo pago</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
-            Te vamos a pedir una seña del 10% del total para confirmar tu pedido. El resto lo pagás cuando recibís tu pedido.
+            Pagás el total de tu pedido cuando llega a tu casa.
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-pregunta" onclick="toggleFaq(this)">
-            <span>¿En qué zonas entregan?</span>
+            <span>En qué zonas entregan</span>
             <span class="faq-icono">+</span>
           </button>
           <div class="faq-respuesta">
@@ -444,7 +474,7 @@
         <span class="bg-circle bg-circle--dash" style="width:180px;height:180px;top:-70px;right:-50px;border-color:var(--accent);opacity:.35;"></span>
         <span class="bg-circle" style="width:90px;height:90px;bottom:-40px;left:6%;border-color:var(--accent);opacity:.3;"></span>
       </div>
-      <h2>¿Listo para comprar más simple?</h2>
+      <h2><span>Listo para comprar </span><strong>más simple</strong></h2>
       <button class="btn-primary" onclick="mostrarCatalogo()">Ver catálogo</button>
     </div>
   </section>
@@ -466,7 +496,7 @@
         <span class="footer-dot">·</span>
         <span class="footer-copy">Carrodilla, Mendoza</span>
         <span class="footer-dot">·</span>
-        <a class="footer-whatsapp" href="https://wa.me/5491112345678" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="footer-whatsapp" href="https://wa.me/5492617716916" target="_blank" rel="noopener">WhatsApp</a>
       </div>
 
     </div>
