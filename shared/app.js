@@ -224,6 +224,22 @@ function renderGrupos() {
   });
 
   Object.values(porSeccion).forEach(({ sub, cat, items }) => {
+    // Ordenar alfabéticamente por nombre de producto: así los productos
+    // "parecidos" (mismo tipo, distinta marca — ej. "Obleas 9 de Oro" y
+    // "Obleas Bauducco") quedan agrupados uno al lado del otro, en vez de
+    // depender del Id_Grupo (que no tiene relación con el orden visual).
+    items.sort(([gidA, varsA], [gidB, varsB]) => {
+      const nombreA = (grupos[gidA]?.nombre || varsA[0]['Producto'] || '');
+      const nombreB = (grupos[gidB]?.nombre || varsB[0]['Producto'] || '');
+      const cmpNombre = nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
+      if (cmpNombre !== 0) return cmpNombre;
+      // Mismo nombre genérico (ej. "Obleas"): desempatar por marca para
+      // que el orden entre variantes de distinta marca sea prolijo.
+      const marcaA = (grupos[gidA]?.marca || varsA[0]['Marca'] || '');
+      const marcaB = (grupos[gidB]?.marca || varsB[0]['Marca'] || '');
+      return marcaA.localeCompare(marcaB, 'es', { sensitivity: 'base' });
+    });
+
     const titulo = document.createElement('div');
     titulo.className = 'seccion-titulo';
     titulo.textContent = sub || cat;
