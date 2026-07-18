@@ -658,6 +658,10 @@ function renderExpanded(gid, vars, imgEl) {
     btnMenos.className = 'qty-btn';
     btnMenos.textContent = '−';
 
+    const numWrap = document.createElement('div');
+    numWrap.className = 'qty-num-wrap';
+    numWrap.title = 'Tocá para escribir la cantidad';
+
     const numEl = document.createElement('input');
     numEl.type = 'number';
     numEl.min = '1';
@@ -666,6 +670,12 @@ function renderExpanded(gid, vars, imgEl) {
     numEl.className = 'qty-num';
     numEl.value = qty;
 
+    const editIcon = document.createElement('span');
+    editIcon.className = 'qty-edit-icon';
+    editIcon.textContent = '✏️';
+
+    numWrap.append(numEl, editIcon);
+
     const btnMas = document.createElement('button');
     btnMas.className = 'qty-btn';
     btnMas.textContent = '+';
@@ -673,6 +683,10 @@ function renderExpanded(gid, vars, imgEl) {
     btnMenos.addEventListener('click', e => { e.stopPropagation(); if (qty > 1) { qty--; numEl.value = qty; } });
     btnMas.addEventListener('click',   e => { e.stopPropagation(); qty++; numEl.value = qty; });
 
+    numWrap.addEventListener('click', e => {
+      e.stopPropagation();
+      numEl.focus();
+    });
     numEl.addEventListener('click', e => e.stopPropagation());
     numEl.addEventListener('focus', e => { e.stopPropagation(); numEl.select(); });
     numEl.addEventListener('input', e => {
@@ -698,7 +712,7 @@ function renderExpanded(gid, vars, imgEl) {
       }
     });
 
-    qtyCtrl.append(btnMenos, numEl, btnMas);
+    qtyCtrl.append(btnMenos, numWrap, btnMas);
 
     const agregarBtn = document.createElement('button');
     agregarBtn.className = 'agregar-btn';
@@ -722,6 +736,11 @@ function renderExpanded(gid, vars, imgEl) {
 
     qtyRow.append(qtyCtrl, agregarBtn);
     expanded.appendChild(qtyRow);
+
+    const qtyHint = document.createElement('div');
+    qtyHint.className = 'qty-hint';
+    qtyHint.innerHTML = '✏️ <span>Tocá el número para ingresar la cantidad directamente</span>';
+    expanded.appendChild(qtyHint);
 
     // Cerrar
     const cerrarBtn = document.createElement('button');
@@ -907,12 +926,15 @@ function renderCarritoItems() {
         <div class="ci-precio">${precioLinea}</div>
         <div class="ci-qty-row">
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, -1)">−</button>
-          <input type="number" min="1" inputmode="numeric" pattern="[0-9]*" class="ci-qty-num" value="${item.qty}"
-            onfocus="this.select()"
-            oninput="cambiarQtyCarritoInput(${idx}, this.value, false)"
-            onchange="cambiarQtyCarritoInput(${idx}, this.value, true)"
-            onblur="cambiarQtyCarritoInput(${idx}, this.value, true)"
-            onkeydown="if(event.key==='Enter') this.blur()">
+          <div class="ci-qty-wrap" title="Tocá para escribir la cantidad">
+            <input type="number" min="1" inputmode="numeric" pattern="[0-9]*" class="ci-qty-num" value="${item.qty}"
+              onfocus="this.select()"
+              oninput="cambiarQtyCarritoInput(${idx}, this.value, false)"
+              onchange="cambiarQtyCarritoInput(${idx}, this.value, true)"
+              onblur="cambiarQtyCarritoInput(${idx}, this.value, true)"
+              onkeydown="if(event.key==='Enter') this.blur()">
+            <span class="ci-qty-edit-icon">✏️</span>
+          </div>
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, 1)">+</button>
         </div>
       </div>

@@ -1479,8 +1479,28 @@ img { display: block; max-width: 100%; }
   margin: 0;
 }
 
+.qty-num-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border-left: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+  padding: 0 4px;
+  cursor: pointer;
+  transition: all var(--t);
+}
+.qty-num-wrap:hover {
+  background: var(--accent-bg);
+}
+.qty-num-wrap:focus-within {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
 .qty-num {
-  width: 36px;
+  width: 28px;
   text-align: center;
   font-size: 0.875rem;
   font-weight: 600;
@@ -1489,12 +1509,30 @@ img { display: block; max-width: 100%; }
   font-family: var(--font);
   background: transparent;
   color: var(--t1);
-  padding: 0;
+  padding: 4px 0;
+  cursor: pointer;
   -moz-appearance: textfield;
-  transition: background var(--t);
 }
-.qty-num:focus {
-  background: var(--surface-2);
+.qty-edit-icon {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  margin-left: -2px;
+  margin-right: 2px;
+  pointer-events: none;
+  transition: opacity var(--t);
+}
+.qty-num-wrap:focus-within .qty-edit-icon {
+  opacity: 0;
+}
+
+.qty-hint {
+  font-size: 0.72rem;
+  color: var(--t2);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.85;
 }
 
 .agregar-btn {
@@ -1745,24 +1783,49 @@ img { display: block; max-width: 100%; }
   transition: all var(--t);
 }
 .ci-qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.ci-qty-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px dashed var(--line);
+  border-radius: var(--r1);
+  padding: 1px 4px 1px 2px;
+  cursor: pointer;
+  transition: all var(--t);
+}
+.ci-qty-wrap:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+.ci-qty-wrap:focus-within {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 2px var(--accent-bg);
+}
 .ci-qty-num {
   font-size: 0.845rem;
   font-weight: 600;
-  width: 32px;
+  width: 28px;
   text-align: center;
   color: var(--t1);
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border: none;
   outline: none;
   font-family: var(--font);
   padding: 2px 0;
+  cursor: pointer;
   -moz-appearance: textfield;
-  transition: border-color var(--t), background var(--t);
 }
-.ci-qty-num:hover, .ci-qty-num:focus {
-  border-color: var(--line);
-  background: var(--surface);
+.ci-qty-edit-icon {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity var(--t);
+}
+.ci-qty-wrap:focus-within .ci-qty-edit-icon {
+  opacity: 0;
 }
 
 .ci-eliminar {
