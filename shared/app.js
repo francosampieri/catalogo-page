@@ -647,17 +647,20 @@ function renderExpanded(gid, vars, imgEl) {
     // (La imagen ya se actualiza junto con label y precio arriba, con animación)
 
     function resaltarOpciones() {
-      const chipsWraps = expanded.querySelectorAll('.variantes-chips');
-      chipsWraps.forEach(wrap => {
-        wrap.classList.remove('highlight-pulse');
-        void wrap.offsetWidth;
-        wrap.classList.add('highlight-pulse');
+      const unselectedChips = expanded.querySelectorAll('.chip:not(.selected)');
+      unselectedChips.forEach(chip => {
+        chip.classList.remove('option-alert');
+        void chip.offsetWidth;
+        chip.classList.add('option-alert');
+        setTimeout(() => chip.classList.remove('option-alert'), 1000);
       });
+
       const titulos = expanded.querySelectorAll('.variantes-titulo');
       titulos.forEach(t => {
-        t.classList.remove('highlight-pulse');
+        t.classList.remove('option-alert');
         void t.offsetWidth;
-        t.classList.add('highlight-pulse');
+        t.classList.add('option-alert');
+        setTimeout(() => t.classList.remove('option-alert'), 1000);
       });
     }
 
@@ -695,8 +698,24 @@ function renderExpanded(gid, vars, imgEl) {
     btnMas.className = 'qty-btn';
     btnMas.textContent = '+';
 
-    btnMenos.addEventListener('click', e => { e.stopPropagation(); if (qty > 1) { qty--; numEl.value = qty; } });
-    btnMas.addEventListener('click',   e => { e.stopPropagation(); qty++; numEl.value = qty; });
+    btnMenos.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!estaListo()) {
+        resaltarOpciones();
+        return;
+      }
+      if (qty > 1) { qty--; numEl.value = qty; }
+    });
+
+    btnMas.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!estaListo()) {
+        resaltarOpciones();
+        return;
+      }
+      qty++;
+      numEl.value = qty;
+    });
 
     numWrap.addEventListener('click', e => {
       e.stopPropagation();
@@ -752,10 +771,8 @@ function renderExpanded(gid, vars, imgEl) {
 
     if (!estaListo()) {
       agregarBtn.innerHTML = '<span class="agregar-btn-icon">+</span><span class="agregar-btn-text">Elegí una opción</span>';
-      agregarBtn.disabled = true;
-      numEl.disabled = true;
-      btnMenos.disabled = true;
-      btnMas.disabled = true;
+      agregarBtn.classList.add('btn-disabled');
+      numEl.readOnly = true;
       qtyCtrl.classList.add('disabled');
       qtyCtrl.addEventListener('click', e => {
         e.stopPropagation();
