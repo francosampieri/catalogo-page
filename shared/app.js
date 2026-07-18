@@ -874,8 +874,7 @@ function enviarWhatsApp() {
   });
 
   msg += '━━━━━━━━━━━━━━━━\n';
-  if (hayPrecio) msg += `*TOTAL ESTIMADO: ${formatPrecio(total)}*\n`;
-  msg += '\n_Pedido generado desde el catálogo_';
+  if (hayPrecio) msg += `*TOTAL: ${formatPrecio(total)}*\n`;
 
   window.open(`https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
 }
