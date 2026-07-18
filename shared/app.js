@@ -646,6 +646,21 @@ function renderExpanded(gid, vars, imgEl) {
 
     // (La imagen ya se actualiza junto con label y precio arriba, con animación)
 
+    function resaltarOpciones() {
+      const chipsWraps = expanded.querySelectorAll('.variantes-chips');
+      chipsWraps.forEach(wrap => {
+        wrap.classList.remove('highlight-pulse');
+        void wrap.offsetWidth;
+        wrap.classList.add('highlight-pulse');
+      });
+      const titulos = expanded.querySelectorAll('.variantes-titulo');
+      titulos.forEach(t => {
+        t.classList.remove('highlight-pulse');
+        void t.offsetWidth;
+        t.classList.add('highlight-pulse');
+      });
+    }
+
     // Cantidad + agregar
     const qtyRow = document.createElement('div');
     qtyRow.className = 'qty-row';
@@ -670,11 +685,11 @@ function renderExpanded(gid, vars, imgEl) {
     numEl.className = 'qty-num';
     numEl.value = qty;
 
-    const editIcon = document.createElement('span');
-    editIcon.className = 'qty-edit-icon';
-    editIcon.textContent = '✏️';
+    const editIconWrap = document.createElement('span');
+    editIconWrap.className = 'qty-edit-icon-wrap';
+    editIconWrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="qty-edit-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>`;
 
-    numWrap.append(numEl, editIcon);
+    numWrap.append(numEl, editIconWrap);
 
     const btnMas = document.createElement('button');
     btnMas.className = 'qty-btn';
@@ -685,10 +700,28 @@ function renderExpanded(gid, vars, imgEl) {
 
     numWrap.addEventListener('click', e => {
       e.stopPropagation();
+      if (!estaListo()) {
+        resaltarOpciones();
+        return;
+      }
       numEl.focus();
     });
-    numEl.addEventListener('click', e => e.stopPropagation());
-    numEl.addEventListener('focus', e => { e.stopPropagation(); numEl.select(); });
+    numEl.addEventListener('click', e => {
+      e.stopPropagation();
+      if (!estaListo()) {
+        numEl.blur();
+        resaltarOpciones();
+      }
+    });
+    numEl.addEventListener('focus', e => {
+      e.stopPropagation();
+      if (!estaListo()) {
+        numEl.blur();
+        resaltarOpciones();
+        return;
+      }
+      numEl.select();
+    });
     numEl.addEventListener('input', e => {
       e.stopPropagation();
       const val = parseInt(numEl.value, 10);
@@ -718,10 +751,22 @@ function renderExpanded(gid, vars, imgEl) {
     agregarBtn.className = 'agregar-btn';
 
     if (!estaListo()) {
-      agregarBtn.textContent = 'Elegí una opción';
+      agregarBtn.innerHTML = '<span class="agregar-btn-icon">+</span><span class="agregar-btn-text">Elegí una opción</span>';
       agregarBtn.disabled = true;
+      numEl.disabled = true;
+      btnMenos.disabled = true;
+      btnMas.disabled = true;
+      qtyCtrl.classList.add('disabled');
+      qtyCtrl.addEventListener('click', e => {
+        e.stopPropagation();
+        resaltarOpciones();
+      });
+      agregarBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        resaltarOpciones();
+      });
     } else {
-      agregarBtn.textContent = '+ Agregar al pedido';
+      agregarBtn.innerHTML = '<span class="agregar-btn-icon">+</span><span class="agregar-btn-text">Agregar al pedido</span>';
       agregarBtn.addEventListener('click', e => {
         e.stopPropagation();
         const v = getVarianteSeleccionada();
@@ -729,18 +774,15 @@ function renderExpanded(gid, vars, imgEl) {
         const valActual = parseInt(numEl.value, 10);
         const finalQty = (!isNaN(valActual) && valActual >= 1) ? valActual : qty;
         agregarAlCarrito(gid, v, finalQty);
-        agregarBtn.textContent = '✓ Agregado';
-        setTimeout(() => { agregarBtn.textContent = '+ Agregar más'; }, 1500);
+        agregarBtn.innerHTML = '<span class="agregar-btn-icon">✓</span><span class="agregar-btn-text">Agregado</span>';
+        setTimeout(() => {
+          agregarBtn.innerHTML = '<span class="agregar-btn-icon">+</span><span class="agregar-btn-text">Agregar más</span>';
+        }, 1500);
       });
     }
 
     qtyRow.append(qtyCtrl, agregarBtn);
     expanded.appendChild(qtyRow);
-
-    const qtyHint = document.createElement('div');
-    qtyHint.className = 'qty-hint';
-    qtyHint.innerHTML = '✏️ <span>Tocá el número para ingresar la cantidad directamente</span>';
-    expanded.appendChild(qtyHint);
 
     // Cerrar
     const cerrarBtn = document.createElement('button');
@@ -933,7 +975,7 @@ function renderCarritoItems() {
               onchange="cambiarQtyCarritoInput(${idx}, this.value, true)"
               onblur="cambiarQtyCarritoInput(${idx}, this.value, true)"
               onkeydown="if(event.key==='Enter') this.blur()">
-            <span class="ci-qty-edit-icon">✏️</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ci-qty-edit-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>
           </div>
           <button class="ci-qty-btn" onclick="cambiarQtyCarrito(${idx}, 1)">+</button>
         </div>
