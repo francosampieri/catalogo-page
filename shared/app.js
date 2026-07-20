@@ -295,6 +295,14 @@ function crearCard(gid, vars) {
   img.style.display = 'none';
   imgWrap.append(placeholder, img);
 
+  // Cintillo de descuento sobre la imagen (se muestra/oculta según la
+  // variante activa tenga o no descuento por cantidad)
+  const ribbon = document.createElement('span');
+  ribbon.className = 'dto-ribbon';
+  ribbon.id = `ribbon-${gid}`;
+  ribbon.style.display = 'none';
+  imgWrap.appendChild(ribbon);
+
   // Dots de variante
   if (vars.length > 1) {
     const dots = document.createElement('div');
@@ -333,7 +341,12 @@ function crearCard(gid, vars) {
   const vprecioEl = document.createElement('div');
   vprecioEl.id = `vprecio-${gid}`;
 
-  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl);
+  const vprecioDtoEl = document.createElement('div');
+  vprecioDtoEl.className = 'card-precio-dto';
+  vprecioDtoEl.id = `vprecio-dto-${gid}`;
+  vprecioDtoEl.style.display = 'none';
+
+  body.append(marcaEl, nombreEl, vlabelEl, vprecioEl, vprecioDtoEl);
 
   // ── Expanded ──
   const expanded = document.createElement('div');
@@ -361,7 +374,13 @@ function crearCard(gid, vars) {
 
 function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, animar = true) {
   const v = vars[idx];
-  const precio = parsePrecio(v['Precio_Venta']);
+  const precio    = parsePrecio(v['Precio_Venta']);
+  const precioDto = parsePrecio(v['Precio_Dto']);
+  const uniDto    = parseInt(v['Uni Dto']) || 0;
+  const hayDto    = uniDto > 0 && precioDto !== null;
+
+  const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
+  const ribbonEl      = document.getElementById(`ribbon-${gid}`);
 
   const aplicarCambios = (entrando) => {
     // Label
@@ -375,6 +394,26 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
       } else {
         vprecioEl.textContent = 'Precio a confirmar';
         vprecioEl.className = 'card-precio sin-precio';
+      }
+    }
+
+    // Precio con descuento por cantidad (debajo del precio normal)
+    if (vprecioDtoEl) {
+      if (hayDto) {
+        vprecioDtoEl.textContent = `${formatPrecio(precioDto)} c/u llevando ${uniDto} o más`;
+        vprecioDtoEl.style.display = 'block';
+      } else {
+        vprecioDtoEl.style.display = 'none';
+      }
+    }
+
+    // Cintillo de descuento sobre la imagen
+    if (ribbonEl) {
+      if (hayDto) {
+        ribbonEl.textContent = `${uniDto}+ menos`;
+        ribbonEl.style.display = 'flex';
+      } else {
+        ribbonEl.style.display = 'none';
       }
     }
 
@@ -416,6 +455,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
 
     if (vlabelEl)  vlabelEl.style.opacity  = '1';
     if (vprecioEl) vprecioEl.style.opacity = '1';
+    if (vprecioDtoEl) vprecioDtoEl.style.opacity = '1';
   };
 
   if (!animar || !imgEl) {
@@ -429,6 +469,7 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
   imgEl.style.transform = 'translateX(-14px)';
   if (vlabelEl)  vlabelEl.style.opacity  = '0';
   if (vprecioEl) vprecioEl.style.opacity = '0';
+  if (vprecioDtoEl) vprecioDtoEl.style.opacity = '0';
 
   setTimeout(() => {
     aplicarCambios(() => {
@@ -640,7 +681,7 @@ function renderExpanded(gid, vars, imgEl) {
     if (uniDto > 0 && precioDto !== null) {
       const dtoDiv = document.createElement('div');
       dtoDiv.className = 'descuento-bloque';
-      dtoDiv.innerHTML = `<div class="descuento-info">Comprando ${uniDto} o más: <strong>${formatPrecio(precioDto)}</strong> c/u</div>`;
+      dtoDiv.innerHTML = `<div class="descuento-info"><span class="dto-cantidad">Comprando ${uniDto} o más</span><strong>${formatPrecio(precioDto)} c/u</strong></div>`;
       expanded.appendChild(dtoDiv);
     }
 
