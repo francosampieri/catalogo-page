@@ -27,7 +27,7 @@ function parsePrecio(str) {
 
 function formatPrecio(n) {
   if (n === null || n === undefined) return null;
-  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 // ══ CARGA DE DATOS ══
@@ -295,14 +295,6 @@ function crearCard(gid, vars) {
   img.style.display = 'none';
   imgWrap.append(placeholder, img);
 
-  // Cintillo de descuento sobre la imagen (se muestra/oculta según la
-  // variante activa tenga o no descuento por cantidad)
-  const ribbon = document.createElement('span');
-  ribbon.className = 'dto-ribbon';
-  ribbon.id = `ribbon-${gid}`;
-  ribbon.style.display = 'none';
-  imgWrap.appendChild(ribbon);
-
   // Dots de variante
   if (vars.length > 1) {
     const dots = document.createElement('div');
@@ -358,10 +350,10 @@ function crearCard(gid, vars) {
   // Inicializar vista con variante 0
   if (rotaciones[gid]?.timer) clearInterval(rotaciones[gid].timer);
   rotaciones[gid] = { indexActual: 0, timer: null };
-  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, false);
+  actualizarVistaCerrada(gid, vars, 0, img, vlabelEl, vprecioEl, vprecioDtoEl, false);
 
   // Rotación automática si hay múltiples variantes
-  if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl);
+  if (vars.length > 1) iniciarRotacion(gid, vars, img, vlabelEl, vprecioEl, vprecioDtoEl);
 
   // Click para expandir
   card.addEventListener('click', (e) => {
@@ -372,15 +364,12 @@ function crearCard(gid, vars) {
   return card;
 }
 
-function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, animar = true) {
+function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, animar = true) {
   const v = vars[idx];
   const precio    = parsePrecio(v['Precio_Venta']);
   const precioDto = parsePrecio(v['Precio_Dto']);
   const uniDto    = parseInt(v['Uni Dto']) || 0;
   const hayDto    = uniDto > 0 && precioDto !== null;
-
-  const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
-  const ribbonEl      = document.getElementById(`ribbon-${gid}`);
 
   const aplicarCambios = (entrando) => {
     // Label
@@ -397,23 +386,14 @@ function actualizarVistaCerrada(gid, vars, idx, imgEl, vlabelEl, vprecioEl, anim
       }
     }
 
-    // Precio con descuento por cantidad (debajo del precio normal)
+    // Precio con descuento por cantidad (debajo del precio normal).
+    // Solo el precio resalta (ver CSS); el resto del texto queda en gris.
     if (vprecioDtoEl) {
       if (hayDto) {
-        vprecioDtoEl.textContent = `${formatPrecio(precioDto)} c/u llevando ${uniDto} o más`;
+        vprecioDtoEl.innerHTML = `<strong>${formatPrecio(precioDto)} c/u</strong> ${uniDto} o más`;
         vprecioDtoEl.style.display = 'block';
       } else {
         vprecioDtoEl.style.display = 'none';
-      }
-    }
-
-    // Cintillo de descuento sobre la imagen
-    if (ribbonEl) {
-      if (hayDto) {
-        ribbonEl.textContent = `${uniDto}+ menos`;
-        ribbonEl.style.display = 'flex';
-      } else {
-        ribbonEl.style.display = 'none';
       }
     }
 
@@ -491,14 +471,14 @@ function actualizarDots(gid, idx) {
   }
 }
 
-function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl) {
+function iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl) {
   const rot = rotaciones[gid];
   if (rot.timer) clearInterval(rot.timer);
   rot.timer = setInterval(() => {
     const card = document.getElementById(`card-${gid}`);
     if (!card || card.classList.contains('expanded')) return;
     rot.indexActual = (rot.indexActual + 1) % vars.length;
-    actualizarVistaCerrada(gid, vars, rot.indexActual, imgEl, vlabelEl, vprecioEl);
+    actualizarVistaCerrada(gid, vars, rot.indexActual, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
   }, 3000);
 }
 
@@ -512,6 +492,7 @@ function sincronizarYReanudarRotacion(gid) {
   const imgEl = document.querySelector(`#card-${gid} .card-img-wrap img`);
   const vlabelEl = document.getElementById(`vlabel-${gid}`);
   const vprecioEl = document.getElementById(`vprecio-${gid}`);
+  const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
 
   if (rotaciones[gid] && vlabelEl) {
     const idxActual = vars.findIndex(v => buildVarianteLabel(v, vars) === vlabelEl.textContent);
@@ -521,7 +502,7 @@ function sincronizarYReanudarRotacion(gid) {
     imgEl.onload = null;
     imgEl.onerror = null;
   }
-  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl);
+  if (vars.length > 1) iniciarRotacion(gid, vars, imgEl, vlabelEl, vprecioEl, vprecioDtoEl);
 }
 
 function toggleCard(gid, vars, card, imgEl) {
@@ -665,8 +646,9 @@ function renderExpanded(gid, vars, imgEl) {
     if (varSel) {
       const vlabelEl  = document.getElementById(`vlabel-${gid}`);
       const vprecioEl = document.getElementById(`vprecio-${gid}`);
+      const vprecioDtoEl = document.getElementById(`vprecio-dto-${gid}`);
       const idxSel = vars.indexOf(varSel);
-      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, !esPrimeraDibujada);
+      actualizarVistaCerrada(gid, vars, idxSel >= 0 ? idxSel : 0, imgEl, vlabelEl, vprecioEl, vprecioDtoEl, !esPrimeraDibujada);
     }
     esPrimeraDibujada = false;
 
