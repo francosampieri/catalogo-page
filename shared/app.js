@@ -16,7 +16,7 @@ const rotaciones    = {};  // id_grupo → { timer, indexActual }
 // en que querés que aparezcan. El Id_Grupo se ve en la columna "Id_Grupo"
 // de la hoja de Productos.
 const PRODUCTOS_DESTACADOS = [
-  '1', '196', '220', '8', '27', '241', '41', '62', '267', '74', '253', '117', '133', '145', '147', '152', '156', '184', '200'
+  '1', '196', '220', '8', '241', '41', '267', '74', '253', '133', '145', '147', '152', '156', '184', '200'
 ];
 
 let filtroActivo    = 'Todos';
