@@ -805,6 +805,28 @@ img { display: block; max-width: 100%; }
   padding: var(--space-9) var(--space-5);
 }
 
+/* Destacados (selección manual, arriba de todo en la landing B2B) */
+.destacados {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line-soft);
+}
+.destacados-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-9);
+}
+.destacados-sub {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--t2);
+  margin-top: -8px;
+  margin-bottom: var(--space-6);
+}
+.destacados-grid {
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+}
+
 .categorias-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
