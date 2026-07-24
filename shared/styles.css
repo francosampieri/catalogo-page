@@ -1363,6 +1363,9 @@ img { display: block; max-width: 100%; }
   justify-content: center;
   overflow: hidden;
   position: relative;
+  /* Permite el scroll vertical nativo del navegador; el swipe horizontal
+     para cambiar de variante (solo con la card abierta) lo maneja el JS. */
+  touch-action: pan-y;
 }
 .card-img-wrap img {
   width: 100%;
