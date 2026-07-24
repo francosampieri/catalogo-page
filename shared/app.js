@@ -23,6 +23,10 @@ let filtroActivo    = 'Todos';
 let filtroSubcat    = null;
 let busquedaActiva  = '';
 
+// Onboarding del catálogo: se muestra una sola vez por carga de página
+// (si el usuario recarga o vuelve a entrar al sitio, se vuelve a mostrar).
+let onbMostrado     = false;
+
 // ══ PARSEO ══
 function parsePrecio(str) {
   if (!str || str.trim() === '' || str.includes('#')) return null;
@@ -1235,12 +1239,15 @@ function mostrarCatalogo(cat, sub) {
   mostrarOnboardingToast();
 }
 
-// Franja de onboarding: avisa una sola vez (por navegador) que las cards
-// se pueden tocar para ver variantes y precio por cantidad. Se cierra
-// sola a los 6s, con el botón "Listo", o al tocar cualquier producto.
+// Franja de onboarding: avisa una sola vez por carga de página que las
+// cards se pueden tocar para ver variantes y precio por cantidad. Solo
+// se cierra con el botón "Entendido" — no sola ni al tocar un producto,
+// para asegurarnos de que se lea. Si el usuario recarga o vuelve a entrar
+// más tarde, se vuelve a mostrar (no se guarda en localStorage a propósito).
 function mostrarOnboardingToast() {
-  if (localStorage.getItem('mv_onb_catalogo')) return;
+  if (onbMostrado) return;
   if (document.getElementById('onbToast')) return;
+  onbMostrado = true;
 
   const toast = document.createElement('div');
   toast.id = 'onbToast';
@@ -1250,18 +1257,13 @@ function mostrarOnboardingToast() {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
     </span>
     <span class="onb-toast-text">Tocá cualquier producto para ver sus variantes y precios por cantidad.</span>
-    <button class="onb-toast-close">Listo</button>
+    <button class="onb-toast-close">Entendido</button>
   `;
   document.body.appendChild(toast);
 
-  const cerrar = () => {
+  toast.querySelector('.onb-toast-close').addEventListener('click', () => {
     document.getElementById('onbToast')?.remove();
-    localStorage.setItem('mv_onb_catalogo', '1');
-  };
-
-  toast.querySelector('.onb-toast-close').addEventListener('click', cerrar);
-  document.getElementById('catalogo')?.addEventListener('click', cerrar, { once: true });
-  setTimeout(cerrar, 6000);
+  });
 }
 
 function scrollLanding(id) {
